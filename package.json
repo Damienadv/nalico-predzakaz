@@ -1,0 +1,14 @@
+{
+  "name": "elvira-korean-warehouse",
+  "version": "2.0.0",
+  "description": "Склад Эльвира-Кореянка - Dashboard для управления прайс-листами",
+  "main": "index.html",
+  "scripts": {
+    "convert": "node convert-to-json.js",
+    "start": "node server.js",
+    "update": "node convert-to-json.js"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузка файла - Predzakaz Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .upload-area {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        label {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #0d6efd;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        label:hover {
+            background: #0b5ed7;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+            text-align: left;
+            display: none;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-area">
+        <h1>Загрузите Excel файл</h1>
+        <p>Выберите файл из директории price_files/</p>
+        <label for="fileInput">📁 Выбрать файл</label>
+        <input type="file" id="fileInput" accept=".xlsx,.xls">
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            const resultDiv = document.getElementById('result');
+            
+            if (!file) return;
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p>Загрузка и анализ файла...</p>';
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '' });
+                    
+                    // Ищем заголовки
+                    let headerRowIndex = -1;
+                    let headers = [];
+                    
+                    for (let i = 0; i < Math.min(5, jsonData.length); i++) {
+                        const row = jsonData[i];
+                        const hasHeaders = row.some(cell => {
+                            const cellStr = String(cell || '').toLowerCase().trim();
+                            return cellStr.includes('бренд') || 
+                                   cellStr.includes('наименование') || 
+                                   cellStr.includes('остаток');
+                        });
+                        
+                        if (hasHeaders) {
+                            headerRowIndex = i;
+                            headers = row;
+                            break;
+                        }
+                    }
+                    
+                    if (headerRowIndex === -1) {
+                        resultDiv.innerHTML = '<p class="error">❌ Не удалось найти заголовки в файле</p>';
+                        return;
+                    }
+                    
+                    // Считаем товары
+                    let products = 0;
+                    let inStock = 0;
+                    
+                    for (let i = headerRowIndex + 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (!row || row.length === 0) continue;
+                        
+                        const brand = String(row[0] || '').trim();
+                        const name = String(row[1] || '').trim();
+                        
+                        if (!brand && !name) continue;
+                        
+                        products++;
+                        
+                        const stock = parseInt(String(row[9] || '0').replace(/[^\d-]/g, '')) || 0;
+                        if (stock > 0) inStock++;
+                    }
+                    
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ Файл успешно загружен!</p>
+                        <p><strong>Имя файла:</strong> ${file.name}</p>
+                        <p><strong>Лист:</strong> ${workbook.SheetNames[0]}</p>
+                        <p><strong>Заголовки найдены в строке:</strong> ${headerRowIndex}</p>
+                        <p><strong>Всего товаров:</strong> ${products}</p>
+                        <p><strong>В наличии:</strong> ${inStock}</p>
+                        <hr>
+                        <p style="margin-top: 15px;">
+                            Теперь откройте <strong>index.html</strong> и выберите этот же файл для загрузки данных в дашборд.
+                        </p>
+                    `;
+                    
+                } catch (error) {
+                    resultDiv.innerHTML = `<p class="error">❌ Ошибка при обработке файла: ${error.message}</p>`;
+                    console.error(error);
+                }
+            };
+            
+            reader.onerror = () => {
+                resultDiv.innerHTML = '<p class="error">❌ Ошибка при чтении файла</p>';
+            };
+            
+            reader.readAsArrayBuffer(file);
+        });
+    </script>
+</body>
+</html>

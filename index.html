@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Склад "Эльвира-Кореянка"</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --accent-color: #0d6efd;
+            --accent-hover: #0b5ed7;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-card: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #adb5bd;
+            --border-color: #404040;
+            --shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .stat-card.success {
+            border-left-color: var(--success-color);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .filters {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        input, select, button {
+            padding: 10px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            cursor: pointer;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        button.secondary:hover {
+            background: var(--border-color);
+        }
+
+        .table-container {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: var(--bg-secondary);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        th:hover {
+            background: var(--border-color);
+        }
+
+        th.sortable::after {
+            content: ' ⇅';
+            opacity: 0.3;
+        }
+
+        th.sorted-asc::after {
+            content: ' ↑';
+            opacity: 1;
+        }
+
+        th.sorted-desc::after {
+            content: ' ↓';
+            opacity: 1;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .stock-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stock-badge.in-stock {
+            background: #d1e7dd;
+            color: #0a3622;
+        }
+
+        .stock-badge.out-of-stock {
+            background: #f8d7da;
+            color: #58151c;
+        }
+
+        [data-theme="dark"] .stock-badge.in-stock {
+            background: #0a3622;
+            color: #d1e7dd;
+        }
+
+        [data-theme="dark"] .stock-badge.out-of-stock {
+            background: #58151c;
+            color: #f8d7da;
+        }
+
+        .price {
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #58151c;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        [data-theme="dark"] .error {
+            background: #58151c;
+            color: #f8d7da;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-container {
+                padding: 10px;
+            }
+
+            .stat-value {
+                font-size: 22px;
+            }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .info-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .info-banner.show {
+            display: block;
+        }
+
+        .info-banner h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .info-banner p {
+            margin: 5px 0;
+            opacity: 0.95;
+        }
+
+        .info-banner .close-btn {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+            line-height: 1;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .info-banner .close-btn:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>📦 Склад "Эльвира-Кореянка"</h1>
+                <div class="file-info">
+                    <span id="fileInfo">Загрузка последнего прайс-листа...</span>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="auto-refresh">
+                    <label for="autoRefresh">Авто-обновление</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoRefresh">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌙</button>
+            </div>
+        </header>
+
+        <div id="errorContainer"></div>
+
+        <div class="info-banner show" id="infoBanner">
+            <span class="close-btn" onclick="closeInfoBanner()">×</span>
+            <h3>👋 Добро пожаловать в Склад "Эльвира-Кореянка"!</h3>
+            <p><strong>Автоматическая загрузка:</strong> Последний прайс-лист загружается автоматически</p>
+            <p><strong>Ручная загрузка:</strong> Нажмите кнопку "📁 Загрузить файл" для выбора другого файла</p>
+            <p><strong>Фильтры:</strong> Используйте поиск, фильтры по бренду и наличию для быстрого поиска товаров</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Всего товаров</div>
+                <div class="stat-value" id="totalProducts">0</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-label">В наличии</div>
+                <div class="stat-value" id="inStockProducts">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Последнее обновление</div>
+                <div class="stat-value" style="font-size: 16px;" id="lastUpdate">—</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="searchInput">🔍 Поиск по названию</label>
+                    <input type="text" id="searchInput" placeholder="Введите название товара...">
+                </div>
+                <div class="filter-group">
+                    <label for="brandFilter">🏷️ Бренд</label>
+                    <select id="brandFilter">
+                        <option value="">Все бренды</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="stockFilter">📦 Наличие</label>
+                    <select id="stockFilter">
+                        <option value="instock">Только в наличии</option>
+                        <option value="all">Все товары</option>
+                    </select>
+                </div>
+            </div>
+            <div class="button-group">
+                <button onclick="loadExcelFile()">📁 Загрузить файл</button>
+                <button onclick="exportToCSV()">📥 Экспорт в CSV</button>
+                <button class="secondary" onclick="resetFilters()">🔄 Сбросить фильтры</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="productsTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-column="brand">Бренд</th>
+                        <th class="sortable" data-column="name">Наименование</th>
+                        <th class="sortable" data-column="description">Категория</th>
+                        <th class="sortable" data-column="volume">Объем, мл</th>
+                        <th class="sortable" data-column="rrp">РРЦ</th>
+                        <th class="sortable" data-column="price">Стоимость, ₽</th>
+                        <th class="sortable" data-column="stock">Остаток склад</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="8" class="loading">
+                            ⏳ Загружается последний прайс-лист из директории price_files/...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let allProducts = [];
+        let filteredProducts = [];
+        let sortColumn = null;
+        let sortDirection = 'asc';
+        let autoRefreshInterval = null;
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        });
+
+        // Auto-refresh toggle
+        document.getElementById('autoRefresh').addEventListener('change', (e) => {
+            if (e.target.checked) {
+                autoRefreshInterval = setInterval(() => {
+                    loadDataFromJSON();
+                }, 30000);
+            } else {
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                    autoRefreshInterval = null;
+                }
+            }
+        });
+
+        // Автоматическая загрузка данных из JSON
+        async function loadDataFromJSON() {
+            try {
+                showError('');
+                console.log('Загрузка данных из data.json...');
+                
+                const response = await fetch('./data.json');
+                if (!response.ok) {
+                    throw new Error('Не удалось загрузить data.json');
+                }
+                
+                const data = await response.json();
+                console.log('Данные загружены:', data.metadata);
+                
+                // Загружаем товары
+                allProducts = data.products;
+                
+                // Обновляем информацию о файле
+                updateFileInfo(data.metadata.filename, new Date(data.metadata.updated).getTime());
+                
+                // Скрываем информационный баннер
+                closeInfoBanner();
+                
+                // Заполняем фильтр брендов
+                populateBrandFilter();
+                
+                // Применяем фильтры
+                applyFilters();
+                
+                console.log(`✅ Загружено ${allProducts.length} товаров`);
+                
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                showError('Не удалось загрузить данные. Убедитесь, что файл data.json существует. Запустите скрипт: node convert-to-json.js', 'error');
+                
+                // Предлагаем загрузить Excel файл вручную
+                document.getElementById('fileInfo').textContent = 'Ошибка загрузки данных. Используйте кнопку "Загрузить файл"';
+            }
+        }
+
+        // Ручная загрузка Excel файла (через диалог выбора) - для обратной совместимости
+        function loadExcelFile() {
+            showError('');
+            
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.xlsx,.xls';
+            
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    await processExcelFile(file);
+                }
+            };
+            
+            // Показываем диалог выбора файла
+            input.click();
+        }
+
+        async function processExcelFile(file) {
+            const reader = new FileReader();
+            
+            reader.onload = async (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Берем первый лист
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    
+                    // Парсим данные
+                    parseProducts(jsonData, file.name);
+                    
+                    updateFileInfo(file.name, file.lastModified || Date.now());
+                } catch (error) {
+                    showError('Ошибка при обработке файла: ' + error.message);
+                    console.error(error);
+                }
+            };
+            
+            reader.onerror = () => {
+                showError('Ошибка при чтении файла');
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
+        function parseProducts(data, filename) {
+            if (data.length < 2) {
+                showError('Файл не содержит данных');
+                return;
+            }
+
+            // Ищем заголовки - они могут быть не в первой строке
+            let headerRowIndex = -1;
+            let headers = [];
+            
+            for (let i = 0; i < Math.min(5, data.length); i++) {
+                const row = data[i];
+                const hasHeaders = row.some(cell => {
+                    const cellStr = String(cell || '').toLowerCase().trim();
+                    return cellStr.includes('бренд') || 
+                           cellStr.includes('наименование') || 
+                           cellStr.includes('остаток');
+                });
+                
+                if (hasHeaders) {
+                    headerRowIndex = i;
+                    headers = row;
+                    console.log(`Найдены заголовки в строке ${i}:`, headers);
+                    break;
+                }
+            }
+            
+            if (headerRowIndex === -1) {
+                showError('Не удалось найти заголовки в файле');
+                return;
+            }
+            
+            // Маппинг колонок
+            const columnMap = {
+                brand: -1,
+                name: -1,
+                description: -1,
+                article: -1,
+                volume: -1,
+                rrp: -1,
+                price: -1,
+                order: -1,
+                total: -1,
+                stock: -1
+            };
+
+            // Ищем индексы нужных колонок
+            headers.forEach((header, index) => {
+                const h = String(header || '').toLowerCase().trim();
+                if (h.includes('бренд')) columnMap.brand = index;
+                else if (h.includes('наименование')) columnMap.name = index;
+                else if (h.includes('артикул')) columnMap.article = index;
+                else if (h.includes('объем')) columnMap.volume = index;
+                else if (h.includes('ррц')) columnMap.rrp = index;
+                else if (h.includes('стоимость')) columnMap.price = index;
+                else if (h.includes('заказ')) columnMap.order = index;
+                else if (h.includes('итого')) columnMap.total = index;
+                else if (h.includes('остаток')) columnMap.stock = index;
+            });
+            
+            // Проверяем, что нашли описание (третья колонка после наименования)
+            if (columnMap.name >= 0 && columnMap.name + 1 < headers.length) {
+                const nextCol = String(headers[columnMap.name + 1] || '').trim();
+                if (!nextCol || nextCol === '') {
+                    columnMap.description = columnMap.name + 1;
+                }
+            }
+
+            console.log('Маппинг колонок:', columnMap);
+
+            // Парсим строки
+            allProducts = [];
+            for (let i = headerRowIndex + 1; i < data.length; i++) {
+                const row = data[i];
+                if (!row || row.length === 0) continue;
+
+                // Получаем данные с правильной обработкой типов
+                const brand = columnMap.brand >= 0 ? String(row[columnMap.brand] || '').trim() : '';
+                const name = columnMap.name >= 0 ? String(row[columnMap.name] || '').trim() : '';
+                const description = columnMap.description >= 0 ? String(row[columnMap.description] || '').trim() : '';
+                const article = columnMap.article >= 0 ? String(row[columnMap.article] || '').trim() : '';
+                
+                // Парсим числовые значения безопасно
+                const volume = columnMap.volume >= 0 ? parseFloat(String(row[columnMap.volume] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
+                const rrp = columnMap.rrp >= 0 ? parseFloat(String(row[columnMap.rrp] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
+                const price = columnMap.price >= 0 ? parseFloat(String(row[columnMap.price] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
+                const order = columnMap.order >= 0 ? parseInt(String(row[columnMap.order] || '0').replace(/[^\d-]/g, '')) || 0 : 0;
+                const total = columnMap.total >= 0 ? parseFloat(String(row[columnMap.total] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
+                const stock = columnMap.stock >= 0 ? parseInt(String(row[columnMap.stock] || '0').replace(/[^\d-]/g, '')) || 0 : 0;
+
+                // Пропускаем пустые строки (нет бренда И нет названия)
+                if (!brand && !name) continue;
+
+                const product = {
+                    brand,
+                    name,
+                    description,
+                    article: article || description, // Используем описание если артикул пустой
+                    volume,
+                    rrp,
+                    price,
+                    order,
+                    total,
+                    stock
+                };
+
+                allProducts.push(product);
+            }
+
+            console.log(`Загружено ${allProducts.length} товаров из файла ${filename}`);
+            console.log('Первые 3 товара:', allProducts.slice(0, 3));
+
+            // Скрываем информационный баннер после успешной загрузки
+            closeInfoBanner();
+
+            // Заполняем фильтр брендов
+            populateBrandFilter();
+            
+            // Применяем фильтры
+            applyFilters();
+        }
+
+        function populateBrandFilter() {
+            const brandFilter = document.getElementById('brandFilter');
+            const brands = [...new Set(allProducts.map(p => p.brand))].sort();
+            
+            brandFilter.innerHTML = '<option value="">Все бренды</option>';
+            brands.forEach(brand => {
+                if (brand) {
+                    const option = document.createElement('option');
+                    option.value = brand;
+                    option.textContent = brand;
+                    brandFilter.appendChild(option);
+                }
+            });
+        }
+
+        function applyFilters() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const brandValue = document.getElementById('brandFilter').value;
+            const stockValue = document.getElementById('stockFilter').value;
+
+            filteredProducts = allProducts.filter(product => {
+                // Поиск по названию, бренду, описанию
+                const matchesSearch = !searchValue || 
+                    product.name.toLowerCase().includes(searchValue) ||
+                    product.brand.toLowerCase().includes(searchValue) ||
+                    (product.description && product.description.toLowerCase().includes(searchValue)) ||
+                    (product.article && product.article.toLowerCase().includes(searchValue));
+
+                // Фильтр по бренду
+                const matchesBrand = !brandValue || product.brand === brandValue;
+
+                // Фильтр по наличию
+                const matchesStock = stockValue === 'all' || 
+                    (stockValue === 'instock' && product.stock > 0);
+
+                return matchesSearch && matchesBrand && matchesStock;
+            });
+
+            // Применяем сортировку если есть
+            if (sortColumn) {
+                sortProducts(sortColumn, false);
+            }
+
+            renderTable();
+            updateStats();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            
+            if (filteredProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="no-data">Нет товаров для отображения</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredProducts.map(product => `
+                <tr>
+                    <td><strong>${escapeHtml(product.brand)}</strong></td>
+                    <td>${escapeHtml(product.name)}</td>
+                    <td><em>${escapeHtml(product.description || '—')}</em></td>
+                    <td>${product.volume || '—'}</td>
+                    <td>${product.rrp ? product.rrp.toLocaleString('ru-RU') + ' ₽' : '—'}</td>
+                    <td class="price">${product.price ? product.price.toLocaleString('ru-RU') + ' ₽' : '—'}</td>
+                    <td><strong>${product.stock}</strong></td>
+                    <td>
+                        <span class="stock-badge ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                            ${product.stock > 0 ? '✓ В наличии' : '✗ Нет в наличии'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats() {
+            const totalProducts = filteredProducts.length;
+            const inStockProducts = filteredProducts.filter(p => p.stock > 0).length;
+
+            document.getElementById('totalProducts').textContent = totalProducts.toLocaleString('ru-RU');
+            document.getElementById('inStockProducts').textContent = inStockProducts.toLocaleString('ru-RU');
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ru-RU');
+        }
+
+        function updateFileInfo(filename, timestamp) {
+            const date = new Date(timestamp);
+            document.getElementById('fileInfo').textContent = 
+                `📄 ${filename} (изменен: ${date.toLocaleDateString('ru-RU')} ${date.toLocaleTimeString('ru-RU')})`;
+        }
+
+        // Sorting
+        document.querySelectorAll('th.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                const column = th.dataset.column;
+                sortProducts(column);
+            });
+        });
+
+        function sortProducts(column, toggle = true) {
+            if (toggle) {
+                if (sortColumn === column) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = column;
+                    sortDirection = 'asc';
+                }
+            }
+
+            filteredProducts.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+
+                // Для строк
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+
+                if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+                if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            // Обновляем индикаторы сортировки
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.classList.remove('sorted-asc', 'sorted-desc');
+                if (th.dataset.column === column) {
+                    th.classList.add(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+                }
+            });
+
+            renderTable();
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            if (filteredProducts.length === 0) {
+                alert('Нет данных для экспорта');
+                return;
+            }
+
+            const headers = ['Бренд', 'Наименование', 'Категория', 'Объем мл', 'РРЦ', 'Стоимость руб', 'Остаток склад'];
+            const rows = filteredProducts.map(p => [
+                p.brand,
+                p.name,
+                p.description || '',
+                p.volume,
+                p.rrp,
+                p.price,
+                p.stock
+            ]);
+
+            const csvContent = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+            ].join('\n');
+
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `predzakaz_export_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('brandFilter').value = '';
+            document.getElementById('stockFilter').value = 'instock';
+            applyFilters();
+        }
+
+        // Show error
+        function showError(message, type = 'error') {
+            const container = document.getElementById('errorContainer');
+            if (!message) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const alertClass = type === 'info' ? 'file-info' : 'error';
+            container.innerHTML = `<div class="${alertClass}">${message}</div>`;
+        }
+
+        // Utility function
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Close info banner
+        function closeInfoBanner() {
+            document.getElementById('infoBanner').classList.remove('show');
+            localStorage.setItem('infoBannerClosed', 'true');
+        }
+
+        // Check if banner was closed before
+        if (localStorage.getItem('infoBannerClosed') === 'true') {
+            document.getElementById('infoBanner').classList.remove('show');
+        }
+
+        // Event listeners for filters
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('brandFilter').addEventListener('change', applyFilters);
+        document.getElementById('stockFilter').addEventListener('change', applyFilters);
+
+        // Автоматическая загрузка данных при открытии страницы
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDataFromJSON();
+        });
+    </script>
+</body>
+</html>

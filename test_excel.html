@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Excel Reader</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <h1>Excel File Structure Test</h1>
+    <input type="file" id="fileInput" accept=".xlsx,.xls">
+    <pre id="output"></pre>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                let output = `Имя файла: ${file.name}\n\n`;
+                output += `Листы: ${workbook.SheetNames.join(', ')}\n\n`;
+                
+                workbook.SheetNames.forEach(sheetName => {
+                    const sheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+                    
+                    output += `=== Лист: ${sheetName} ===\n`;
+                    output += `Строк: ${jsonData.length}\n\n`;
+                    output += `Первые 10 строк:\n`;
+                    
+                    jsonData.slice(0, 10).forEach((row, i) => {
+                        output += `Строка ${i}: [${row.map(cell => JSON.stringify(cell)).join(', ')}]\n`;
+                    });
+                    output += `\n`;
+                });
+                
+                document.getElementById('output').textContent = output;
+            };
+            reader.readAsArrayBuffer(file);
+        });
+    </script>
+</body>
+</html>
