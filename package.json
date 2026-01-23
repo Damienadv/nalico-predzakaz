@@ -6,7 +6,8 @@
   "scripts": {
     "convert": "node convert-to-json.js",
     "start": "node server.js",
-    "update": "node convert-to-json.js"
+    "update": "node convert-to-json.js",
+    "prod": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "xlsx": "^0.18.5"
