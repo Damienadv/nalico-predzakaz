@@ -182,12 +182,12 @@
                     <!-- Search -->
                     <div>
                         <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2">
-                            🔍 Поиск
+                            🔍 Поиск (по названию, бренду, категории)
                         </label>
                         <input 
                             v-model="searchQuery"
                             type="text"
-                            placeholder="Введите название товара..."
+                            placeholder="Поиск по названию, бренду или категории..."
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-nalico-milk dark:bg-nalico-dark-bg text-gray-900 dark:text-white placeholder-gray-500 focus:border-nalico-pink focus:ring-4 focus:ring-nalico-pink/15 transition-all outline-none"
                         />
                     </div>
@@ -240,9 +240,13 @@
                     </button>
                     <button 
                         @click="resetFilters"
-                        class="px-6 py-3 border-2 border-nalico-pink text-nalico-pink hover:bg-nalico-milk dark:hover:bg-nalico-dark-bg font-medium rounded-button transition-all duration-200"
+                        class="px-6 py-3 border-2 border-nalico-pink text-nalico-pink hover:bg-nalico-milk dark:hover:bg-nalico-dark-bg font-medium rounded-button transition-all duration-200 relative"
+                        :class="{ 'bg-nalico-milk dark:bg-nalico-dark-bg': hasActiveFilters }"
                     >
                         🔄 Сбросить фильтры
+                        <span v-if="hasActiveFilters" class="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-nalico-pink rounded-full">
+                            {{ activeFiltersCount }}
+                        </span>
                     </button>
                 </div>
             </div>
@@ -442,6 +446,18 @@
                 },
                 inStockCount() {
                     return this.filteredProducts.filter(p => p.stock > 0).length;
+                },
+                hasActiveFilters() {
+                    return this.searchQuery !== '' || 
+                           this.selectedBrands.length > 0 || 
+                           this.sortColumn !== null;
+                },
+                activeFiltersCount() {
+                    let count = 0;
+                    if (this.searchQuery) count++;
+                    if (this.selectedBrands.length > 0) count++;
+                    if (this.sortColumn) count++;
+                    return count;
                 }
             },
             watch: {
@@ -671,6 +687,7 @@
                     this.stockFilter = 'instock';
                     this.sortColumn = null;
                     this.sortDirection = 'asc';
+                    this.currentPage = 1;
                 },
                 
                 // Toggle theme
