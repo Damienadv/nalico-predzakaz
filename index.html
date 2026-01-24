@@ -297,7 +297,7 @@
                             <tr 
                                 v-else
                                 v-for="product in paginatedProducts" 
-                                :key="product.article"
+                                :key="product._uniqueId"
                                 class="border-t border-gray-100 dark:border-gray-800 hover:bg-nalico-milk dark:hover:bg-nalico-dark-bg/50 transition-colors"
                             >
                                 <td class="px-4 sm:px-6 py-4 font-semibold text-gray-900 dark:text-white text-sm">{{ product.brand }}</td>
@@ -503,7 +503,11 @@
                         }
                         
                         const data = await response.json();
-                        this.allProducts = data.products;
+                        // Добавляем уникальный ID к каждому продукту
+                        this.allProducts = data.products.map((product, index) => ({
+                            ...product,
+                            _uniqueId: `${product.brand}-${product.name}-${index}`
+                        }));
                         
                         if (data.metadata) {
                             const date = new Date(data.metadata.updated);
@@ -655,6 +659,7 @@
                         
                         if (!brand && !name) continue;
                         
+                        // Добавляем уникальный ID
                         this.allProducts.push({
                             brand,
                             name,
@@ -665,7 +670,8 @@
                             price,
                             order,
                             total,
-                            stock
+                            stock,
+                            _uniqueId: `${brand}-${name}-${i}`
                         });
                     }
                     
