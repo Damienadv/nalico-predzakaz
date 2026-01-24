@@ -19,6 +19,9 @@
     <!-- XLSX library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -132,19 +135,16 @@
                             @click="toggleTheme"
                             class="p-2.5 rounded-xl bg-nalico-milk dark:bg-nalico-dark-bg hover:bg-nalico-pink/10 transition-all duration-200 hover:scale-105"
                         >
-                            <svg v-if="!isDark" class="w-5 h-5 text-nalico-brown" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                            </svg>
-                            <svg v-else class="w-5 h-5 text-nalico-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
+                            <i v-if="!isDark" data-lucide="moon" class="w-5 h-5 text-nalico-brown"></i>
+                            <i v-else data-lucide="sun" class="w-5 h-5 text-nalico-pink"></i>
                         </button>
                     </div>
                 </div>
                 
                 <!-- File info -->
-                <div v-if="fileInfo" class="mt-3 text-xs text-nalico-brown dark:text-gray-400">
-                    📄 {{ fileInfo }}
+                <div v-if="fileInfo" class="mt-3 text-xs text-nalico-brown dark:text-gray-400 flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                    {{ fileInfo }}
                 </div>
             </div>
         </header>
@@ -181,8 +181,9 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <!-- Search -->
                     <div>
-                        <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2">
-                            🔍 Поиск (по названию, бренду, категории)
+                        <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2 flex items-center gap-2">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                            Поиск (по названию, бренду, категории)
                         </label>
                         <input 
                             v-model="searchQuery"
@@ -194,8 +195,9 @@
                     
                     <!-- Brand Filter -->
                     <div>
-                        <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2">
-                            🏷️ Бренд (можно выбрать несколько)
+                        <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2 flex items-center gap-2">
+                            <i data-lucide="tag" class="w-4 h-4"></i>
+                            Бренд (можно выбрать несколько)
                         </label>
                         <select 
                             v-model="selectedBrands"
@@ -211,8 +213,9 @@
                     
                     <!-- Stock Filter -->
                     <div>
-                        <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2">
-                            📦 Наличие
+                        <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2 flex items-center gap-2">
+                            <i data-lucide="package" class="w-4 h-4"></i>
+                            Наличие
                         </label>
                         <select
                             v-model="stockFilter"
@@ -228,22 +231,25 @@
                 <div class="flex gap-3 flex-wrap">
                     <button 
                         @click="loadExcelFile"
-                        class="px-6 py-3 bg-nalico-pink hover:bg-nalico-pink-hover text-white font-medium rounded-button transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-pink"
+                        class="px-6 py-3 bg-nalico-pink hover:bg-nalico-pink-hover text-white font-medium rounded-button transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-pink flex items-center gap-2"
                     >
-                        📁 Загрузить Excel
+                        <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                        Загрузить Excel
                     </button>
                     <button 
                         @click="exportToCSV"
-                        class="px-6 py-3 bg-nalico-pink hover:bg-nalico-pink-hover text-white font-medium rounded-button transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-pink"
+                        class="px-6 py-3 bg-nalico-pink hover:bg-nalico-pink-hover text-white font-medium rounded-button transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-pink flex items-center gap-2"
                     >
-                        📥 Экспорт в CSV
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        Экспорт в CSV
                     </button>
                     <button 
                         @click="resetFilters"
-                        class="px-6 py-3 border-2 border-nalico-pink text-nalico-pink hover:bg-nalico-milk dark:hover:bg-nalico-dark-bg font-medium rounded-button transition-all duration-200 relative"
+                        class="px-6 py-3 border-2 border-nalico-pink text-nalico-pink hover:bg-nalico-milk dark:hover:bg-nalico-dark-bg font-medium rounded-button transition-all duration-200 relative flex items-center gap-2"
                         :class="{ 'bg-nalico-milk dark:bg-nalico-dark-bg': hasActiveFilters }"
                     >
-                        🔄 Сбросить фильтры
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        Сбросить фильтры
                         <span v-if="hasActiveFilters" class="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-nalico-pink rounded-full">
                             {{ activeFiltersCount }}
                         </span>
@@ -302,12 +308,13 @@
                                 <td class="px-4 sm:px-6 py-4 text-gray-900 dark:text-white">{{ formatPrice(product.price) }}</td>
                                 <td class="px-4 sm:px-6 py-4">
                                     <span 
-                                        class="inline-flex px-3 py-1 rounded-full text-xs font-medium transition-colors"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors"
                                         :class="product.stock > 0 
                                             ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
                                             : 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400'"
                                     >
-                                        {{ product.stock > 0 ? '✓ В наличии' : '✗ Нет в наличии' }}
+                                        <i :data-lucide="product.stock > 0 ? 'check-circle' : 'x-circle'" class="w-3.5 h-3.5"></i>
+                                        {{ product.stock > 0 ? 'В наличии' : 'Нет в наличии' }}
                                     </span>
                                 </td>
                             </tr>
@@ -324,16 +331,18 @@
                         <button 
                             @click="currentPage--"
                             :disabled="currentPage === 1"
-                            class="px-4 py-2 rounded-lg bg-nalico-milk dark:bg-nalico-dark-bg text-nalico-brown dark:text-gray-400 hover:bg-nalico-pink hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="px-4 py-2 rounded-lg bg-nalico-milk dark:bg-nalico-dark-bg text-nalico-brown dark:text-gray-400 hover:bg-nalico-pink hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
                             Назад
                         </button>
                         <button 
                             @click="currentPage++"
                             :disabled="currentPage === totalPages"
-                            class="px-4 py-2 rounded-lg bg-nalico-milk dark:bg-nalico-dark-bg text-nalico-brown dark:text-gray-400 hover:bg-nalico-pink hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="px-4 py-2 rounded-lg bg-nalico-milk dark:bg-nalico-dark-bg text-nalico-brown dark:text-gray-400 hover:bg-nalico-pink hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             Вперёд
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
@@ -463,6 +472,14 @@
             watch: {
                 filteredProducts() {
                     this.currentPage = 1;
+                    this.$nextTick(() => {
+                        lucide.createIcons();
+                    });
+                },
+                isDark() {
+                    this.$nextTick(() => {
+                        lucide.createIcons();
+                    });
                 }
             },
             methods: {
@@ -486,6 +503,9 @@
                         }
                         
                         this.loading = false;
+                        this.$nextTick(() => {
+                            lucide.createIcons();
+                        });
                     } catch (error) {
                         console.error('Ошибка загрузки данных:', error);
                         this.errorMessage = 'Не удалось загрузить данные. Убедитесь, что файл data.json существует.';
@@ -524,6 +544,10 @@
                             
                             const date = new Date(file.lastModified || Date.now());
                             this.fileInfo = `${file.name} (изменён: ${date.toLocaleDateString('ru-RU')} ${date.toLocaleTimeString('ru-RU')})`;
+                            
+                            this.$nextTick(() => {
+                                lucide.createIcons();
+                            });
                         } catch (error) {
                             this.errorMessage = 'Ошибка при обработке файла: ' + error.message;
                             console.error(error);
@@ -688,6 +712,9 @@
                     this.sortColumn = null;
                     this.sortDirection = 'asc';
                     this.currentPage = 1;
+                    this.$nextTick(() => {
+                        lucide.createIcons();
+                    });
                 },
                 
                 // Toggle theme
@@ -737,6 +764,11 @@
                 
                 // Load data
                 this.loadDataFromJSON();
+                
+                // Initialize Lucide icons
+                this.$nextTick(() => {
+                    lucide.createIcons();
+                });
             }
         }).mount('#app');
     </script>
