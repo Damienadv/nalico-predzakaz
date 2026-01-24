@@ -1,0 +1,43 @@
+# Node modules
+node_modules
+npm-debug.log
+
+# Git
+.git
+.gitignore
+
+# Logs
+logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+~$*.xlsx
+~$*.xls
+*:Zone.Identifier
+
+# Documentation (optional - закомментируйте если хотите включить в образ)
+*.md
+!README.md
+
+# Test files
+test_*.html
+upload_test.html
+
+# Scripts (не нужны в production)
+*.bat
+*.sh
+test-*.js
+
+# Build artifacts
+.opencode

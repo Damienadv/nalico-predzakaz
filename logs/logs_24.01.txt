@@ -1,0 +1,1330 @@
+2026-Jan-24 12:37:09.769322
+Starting deployment of Damienadv/nalico-predzakaz:main to localhost.
+2026-Jan-24 12:37:10.073182
+Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.12
+2026-Jan-24 12:37:10.223026
+[CMD]: docker stop -t 30 x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:37:10.223026
+Error response from daemon: No such container: x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:37:10.402790
+[CMD]: docker run -d --network coolify --name x08gg0os4kcoo40wco488k80  --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/coollabsio/coolify-helper:1.0.12
+2026-Jan-24 12:37:10.402790
+02cec9e2da27b64e447b3ea98f9c589411478a356d6da9e84d2f94d88637efd4
+2026-Jan-24 12:37:11.724452
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'GIT_SSH_COMMAND="ssh -o ConnectTimeout=30 -p 22 -o Port=22 -o LogLevel=ERROR -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git ls-remote https://github.com/Damienadv/nalico-predzakaz refs/heads/main'
+2026-Jan-24 12:37:11.724452
+f4101e2479ae997715b8259b8ba686e5cb94e1ad	refs/heads/main
+2026-Jan-24 12:37:11.893196
+Image not found (z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad). Building new image.
+2026-Jan-24 12:37:11.900571
+----------------------------------------
+2026-Jan-24 12:37:11.906741
+Importing Damienadv/nalico-predzakaz:main (commit sha f4101e2479ae997715b8259b8ba686e5cb94e1ad) to /artifacts/x08gg0os4kcoo40wco488k80.
+2026-Jan-24 12:37:12.111180
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'git clone --depth=1 --recurse-submodules --shallow-submodules -b 'main' 'https://github.com/Damienadv/nalico-predzakaz' '/artifacts/x08gg0os4kcoo40wco488k80' && cd '/artifacts/x08gg0os4kcoo40wco488k80' && if [ -f .gitmodules ]; then sed -i "s#git@\(.*\):#https://\1/#g" '/artifacts/x08gg0os4kcoo40wco488k80'/.gitmodules || true && git submodule sync && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git submodule update --init --recursive --depth=1; fi && cd '/artifacts/x08gg0os4kcoo40wco488k80' && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git lfs pull'
+2026-Jan-24 12:37:12.111180
+Cloning into '/artifacts/x08gg0os4kcoo40wco488k80'...
+2026-Jan-24 12:37:13.558488
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'cd /artifacts/x08gg0os4kcoo40wco488k80 && git log -1 f4101e2479ae997715b8259b8ba686e5cb94e1ad --pretty=%B'
+2026-Jan-24 12:37:13.558488
+Add production deployment support: configurable port, PM2 config, and deployment guide
+2026-Jan-24 12:37:13.779898
+Generating nixpacks configuration with: nixpacks plan -f json --env NIXPACKS_NODE_VERSION=22 --env COOLIFY_URL=http://z8o04c8c844o4cs4sooswg00.31.129.109.40.sslip.io --env COOLIFY_FQDN=z8o04c8c844o4cs4sooswg00.31.129.109.40.sslip.io --env COOLIFY_BRANCH=main --env COOLIFY_RESOURCE_UUID=z8o04c8c844o4cs4sooswg00 /artifacts/x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:37:14.054945
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'nixpacks plan -f json --env NIXPACKS_NODE_VERSION=22 --env COOLIFY_URL=http://z8o04c8c844o4cs4sooswg00.31.129.109.40.sslip.io --env COOLIFY_FQDN=z8o04c8c844o4cs4sooswg00.31.129.109.40.sslip.io --env COOLIFY_BRANCH=main --env COOLIFY_RESOURCE_UUID=z8o04c8c844o4cs4sooswg00 /artifacts/x08gg0os4kcoo40wco488k80'
+2026-Jan-24 12:37:14.054945
+{
+2026-Jan-24 12:37:14.054945
+"providers": [],
+2026-Jan-24 12:37:14.054945
+"buildImage": "ghcr.io/railwayapp/nixpacks:ubuntu-1745885067",
+2026-Jan-24 12:37:14.054945
+"variables": {
+2026-Jan-24 12:37:14.054945
+"CI": "true",
+2026-Jan-24 12:37:14.054945
+"COOLIFY_BRANCH": "main",
+2026-Jan-24 12:37:14.054945
+"COOLIFY_FQDN": "z8o04c8c844o4cs4sooswg00.31.129.109.40.sslip.io",
+2026-Jan-24 12:37:14.054945
+"COOLIFY_RESOURCE_UUID": "z8o04c8c844o4cs4sooswg00",
+2026-Jan-24 12:37:14.054945
+"COOLIFY_URL": "http://z8o04c8c844o4cs4sooswg00.31.129.109.40.sslip.io",
+2026-Jan-24 12:37:14.054945
+"NIXPACKS_METADATA": "node",
+2026-Jan-24 12:37:14.054945
+"NIXPACKS_NODE_VERSION": "22",
+2026-Jan-24 12:37:14.054945
+"NODE_ENV": "production",
+2026-Jan-24 12:37:14.054945
+"NPM_CONFIG_PRODUCTION": "false"
+2026-Jan-24 12:37:14.054945
+},
+2026-Jan-24 12:37:14.054945
+"phases": {
+2026-Jan-24 12:37:14.054945
+"build": {
+2026-Jan-24 12:37:14.054945
+"dependsOn": [
+2026-Jan-24 12:37:14.054945
+"install"
+2026-Jan-24 12:37:14.054945
+],
+2026-Jan-24 12:37:14.054945
+"cacheDirectories": [
+2026-Jan-24 12:37:14.054945
+"node_modules/.cache"
+2026-Jan-24 12:37:14.054945
+]
+2026-Jan-24 12:37:14.054945
+},
+2026-Jan-24 12:37:14.054945
+"install": {
+2026-Jan-24 12:37:14.054945
+"dependsOn": [
+2026-Jan-24 12:37:14.054945
+"setup"
+2026-Jan-24 12:37:14.054945
+],
+2026-Jan-24 12:37:14.054945
+"cmds": [
+2026-Jan-24 12:37:14.054945
+"npm ci"
+2026-Jan-24 12:37:14.054945
+],
+2026-Jan-24 12:37:14.054945
+"cacheDirectories": [
+2026-Jan-24 12:37:14.054945
+"/root/.npm"
+2026-Jan-24 12:37:14.054945
+],
+2026-Jan-24 12:37:14.054945
+"paths": [
+2026-Jan-24 12:37:14.054945
+"/app/node_modules/.bin"
+2026-Jan-24 12:37:14.054945
+]
+2026-Jan-24 12:37:14.054945
+},
+2026-Jan-24 12:37:14.054945
+"setup": {
+2026-Jan-24 12:37:14.054945
+"nixPkgs": [
+2026-Jan-24 12:37:14.054945
+"nodejs_22",
+2026-Jan-24 12:37:14.054945
+"npm-9_x"
+2026-Jan-24 12:37:14.054945
+],
+2026-Jan-24 12:37:14.054945
+"nixOverlays": [
+2026-Jan-24 12:37:14.054945
+"https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz"
+2026-Jan-24 12:37:14.054945
+],
+2026-Jan-24 12:37:14.054945
+"nixpkgsArchive": "ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7"
+2026-Jan-24 12:37:14.054945
+}
+2026-Jan-24 12:37:14.054945
+},
+2026-Jan-24 12:37:14.054945
+"start": {
+2026-Jan-24 12:37:14.054945
+"cmd": "npm run start"
+2026-Jan-24 12:37:14.054945
+}
+2026-Jan-24 12:37:14.054945
+}
+2026-Jan-24 12:37:14.253558
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'nixpacks detect /artifacts/x08gg0os4kcoo40wco488k80'
+2026-Jan-24 12:37:14.253558
+node
+2026-Jan-24 12:37:14.266348
+Found application type: node.
+2026-Jan-24 12:37:14.273977
+If you need further customization, please check the documentation of Nixpacks: https://nixpacks.com/docs/providers/node
+2026-Jan-24 12:37:14.281052
+Final Nixpacks plan: {
+2026-Jan-24 12:37:14.281052
+"providers": [],
+2026-Jan-24 12:37:14.281052
+"buildImage": "ghcr.io\/railwayapp\/nixpacks:ubuntu-1745885067",
+2026-Jan-24 12:37:14.281052
+"phases": {
+2026-Jan-24 12:37:14.281052
+"build": {
+2026-Jan-24 12:37:14.281052
+"dependsOn": [
+2026-Jan-24 12:37:14.281052
+"install"
+2026-Jan-24 12:37:14.281052
+],
+2026-Jan-24 12:37:14.281052
+"cacheDirectories": [
+2026-Jan-24 12:37:14.281052
+"node_modules\/.cache"
+2026-Jan-24 12:37:14.281052
+]
+2026-Jan-24 12:37:14.281052
+},
+2026-Jan-24 12:37:14.281052
+"install": {
+2026-Jan-24 12:37:14.281052
+"dependsOn": [
+2026-Jan-24 12:37:14.281052
+"setup"
+2026-Jan-24 12:37:14.281052
+],
+2026-Jan-24 12:37:14.281052
+"cmds": [
+2026-Jan-24 12:37:14.281052
+"npm ci"
+2026-Jan-24 12:37:14.281052
+],
+2026-Jan-24 12:37:14.281052
+"cacheDirectories": [
+2026-Jan-24 12:37:14.281052
+"\/root\/.npm"
+2026-Jan-24 12:37:14.281052
+],
+2026-Jan-24 12:37:14.281052
+"paths": [
+2026-Jan-24 12:37:14.281052
+"\/app\/node_modules\/.bin"
+2026-Jan-24 12:37:14.281052
+]
+2026-Jan-24 12:37:14.281052
+},
+2026-Jan-24 12:37:14.281052
+"setup": {
+2026-Jan-24 12:37:14.281052
+"nixPkgs": [
+2026-Jan-24 12:37:14.281052
+"nodejs_22",
+2026-Jan-24 12:37:14.281052
+"npm-9_x"
+2026-Jan-24 12:37:14.281052
+],
+2026-Jan-24 12:37:14.281052
+"nixOverlays": [
+2026-Jan-24 12:37:14.281052
+"https:\/\/github.com\/railwayapp\/nix-npm-overlay\/archive\/main.tar.gz"
+2026-Jan-24 12:37:14.281052
+],
+2026-Jan-24 12:37:14.281052
+"nixpkgsArchive": "ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7",
+2026-Jan-24 12:37:14.281052
+"aptPkgs": [
+2026-Jan-24 12:37:14.281052
+"curl",
+2026-Jan-24 12:37:14.281052
+"wget"
+2026-Jan-24 12:37:14.281052
+]
+2026-Jan-24 12:37:14.281052
+}
+2026-Jan-24 12:37:14.281052
+},
+2026-Jan-24 12:37:14.281052
+"start": {
+2026-Jan-24 12:37:14.281052
+"cmd": "npm run start"
+2026-Jan-24 12:37:14.281052
+}
+2026-Jan-24 12:37:14.281052
+}
+2026-Jan-24 12:37:14.851631
+Creating build-time .env file in /artifacts (outside Docker context).
+2026-Jan-24 12:37:15.119039
+----------------------------------------
+2026-Jan-24 12:37:15.126670
+Building docker image started.
+2026-Jan-24 12:37:15.133775
+To check the current progress, click on Show Debug Logs.
+2026-Jan-24 12:37:15.141157
+Pulling latest image (nginx:alpine) from the registry.
+2026-Jan-24 12:37:17.425750
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'docker pull nginx:alpine'
+2026-Jan-24 12:37:17.425750
+alpine: Pulling from library/nginx
+2026-Jan-24 12:37:17.863621
+1074353eec0d: Already exists
+2026-Jan-24 12:37:17.872051
+25f453064fd3: Pulling fs layer
+2026-Jan-24 12:37:17.872051
+567f84da6fbd: Pulling fs layer
+2026-Jan-24 12:37:17.872051
+da7c973d8b92: Pulling fs layer
+2026-Jan-24 12:37:17.872051
+33f95a0f3229: Pulling fs layer
+2026-Jan-24 12:37:17.872051
+085c5e5aaa8e: Pulling fs layer
+2026-Jan-24 12:37:17.872051
+0abf9e567266: Pulling fs layer
+2026-Jan-24 12:37:17.872051
+e096540205d5: Pulling fs layer
+2026-Jan-24 12:37:17.872051
+33f95a0f3229: Waiting
+2026-Jan-24 12:37:17.872051
+085c5e5aaa8e: Waiting
+2026-Jan-24 12:37:17.872051
+0abf9e567266: Waiting
+2026-Jan-24 12:37:17.872051
+e096540205d5: Waiting
+2026-Jan-24 12:37:18.710543
+da7c973d8b92: Verifying Checksum
+2026-Jan-24 12:37:18.713783
+da7c973d8b92: Download complete
+2026-Jan-24 12:37:18.730865
+567f84da6fbd:
+2026-Jan-24 12:37:18.733451
+Verifying Checksum
+2026-Jan-24 12:37:18.733451
+567f84da6fbd: Download complete
+2026-Jan-24 12:37:18.864709
+25f453064fd3: Verifying Checksum
+2026-Jan-24 12:37:18.864709
+25f453064fd3: Download complete
+2026-Jan-24 12:37:19.093223
+25f453064fd3: Pull complete
+2026-Jan-24 12:37:19.114363
+567f84da6fbd: Pull complete
+2026-Jan-24 12:37:19.130262
+da7c973d8b92: Pull complete
+2026-Jan-24 12:37:19.374786
+33f95a0f3229: Verifying Checksum
+2026-Jan-24 12:37:19.374786
+33f95a0f3229: Download complete
+2026-Jan-24 12:37:19.380156
+085c5e5aaa8e: Verifying Checksum
+2026-Jan-24 12:37:19.380156
+085c5e5aaa8e: Download complete
+2026-Jan-24 12:37:19.397917
+33f95a0f3229: Pull complete
+2026-Jan-24 12:37:19.412998
+085c5e5aaa8e: Pull complete
+2026-Jan-24 12:37:19.510747
+0abf9e567266: Verifying Checksum
+2026-Jan-24 12:37:19.510747
+0abf9e567266: Download complete
+2026-Jan-24 12:37:19.524427
+0abf9e567266: Pull complete
+2026-Jan-24 12:37:20.577407
+e096540205d5: Verifying Checksum
+2026-Jan-24 12:37:20.577407
+e096540205d5: Download complete
+2026-Jan-24 12:37:21.406522
+e096540205d5: Pull complete
+2026-Jan-24 12:37:21.415710
+Digest: sha256:b0f7830b6bfaa1258f45d94c240ab668ced1b3651c8a222aefe6683447c7bf55
+2026-Jan-24 12:37:21.420866
+Status: Downloaded newer image for nginx:alpine
+2026-Jan-24 12:37:21.427436
+docker.io/library/nginx:alpine
+2026-Jan-24 12:37:21.441871
+Continuing with the building process.
+2026-Jan-24 12:37:21.888355
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'nixpacks build -c /artifacts/thegameplan.json --cache-key 'z8o04c8c844o4cs4sooswg00' --no-error-without-start -n z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build /artifacts/x08gg0os4kcoo40wco488k80 -o /artifacts/x08gg0os4kcoo40wco488k80'
+2026-Jan-24 12:37:21.888355
+2026-Jan-24 12:37:21.888355
+╔══════════════ Nixpacks v1.41.0 ═════════════╗
+2026-Jan-24 12:37:21.888355
+║ setup      │ nodejs_22, npm-9_x, curl, wget ║
+2026-Jan-24 12:37:21.888355
+║─────────────────────────────────────────────║
+2026-Jan-24 12:37:21.888355
+║ install    │ npm ci                         ║
+2026-Jan-24 12:37:21.888355
+║─────────────────────────────────────────────║
+2026-Jan-24 12:37:21.888355
+║ start      │ npm run start                  ║
+2026-Jan-24 12:37:21.888355
+╚═════════════════════════════════════════════╝
+2026-Jan-24 12:37:21.888355
+2026-Jan-24 12:37:21.888355
+2026-Jan-24 12:37:21.888355
+Saved output to:
+2026-Jan-24 12:37:21.888355
+/artifacts/x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:37:22.093991
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'cat /artifacts/x08gg0os4kcoo40wco488k80/.nixpacks/Dockerfile'
+2026-Jan-24 12:37:22.093991
+FROM ghcr.io/railwayapp/nixpacks:ubuntu-1745885067
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+ENTRYPOINT ["/bin/bash", "-l", "-c"]
+2026-Jan-24 12:37:22.093991
+WORKDIR /app/
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+COPY .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix
+2026-Jan-24 12:37:22.093991
+RUN nix-env -if .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix && nix-collect-garbage -d
+2026-Jan-24 12:37:22.093991
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends curl wget
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+ARG CI COOLIFY_BRANCH COOLIFY_FQDN COOLIFY_RESOURCE_UUID COOLIFY_URL NIXPACKS_METADATA NIXPACKS_NODE_VERSION NODE_ENV NPM_CONFIG_PRODUCTION
+2026-Jan-24 12:37:22.093991
+ENV CI=$CI COOLIFY_BRANCH=$COOLIFY_BRANCH COOLIFY_FQDN=$COOLIFY_FQDN COOLIFY_RESOURCE_UUID=$COOLIFY_RESOURCE_UUID COOLIFY_URL=$COOLIFY_URL NIXPACKS_METADATA=$NIXPACKS_METADATA NIXPACKS_NODE_VERSION=$NIXPACKS_NODE_VERSION NODE_ENV=$NODE_ENV NPM_CONFIG_PRODUCTION=$NPM_CONFIG_PRODUCTION
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+# setup phase
+2026-Jan-24 12:37:22.093991
+# noop
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+# install phase
+2026-Jan-24 12:37:22.093991
+ENV NIXPACKS_PATH=/app/node_modules/.bin:$NIXPACKS_PATH
+2026-Jan-24 12:37:22.093991
+COPY . /app/.
+2026-Jan-24 12:37:22.093991
+RUN --mount=type=cache,id=z8o04c8c844o4cs4sooswg00-/root/npm,target=/root/.npm npm ci
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+# build phase
+2026-Jan-24 12:37:22.093991
+# noop
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+RUN printf '\nPATH=/app/node_modules/.bin:$PATH' >> /root/.profile
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+# start
+2026-Jan-24 12:37:22.093991
+COPY . /app
+2026-Jan-24 12:37:22.093991
+2026-Jan-24 12:37:22.093991
+CMD ["npm run start"]
+2026-Jan-24 12:37:22.509490
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'cat /artifacts/build.sh'
+2026-Jan-24 12:37:22.509490
+cd /artifacts/x08gg0os4kcoo40wco488k80 && set -a && source /artifacts/build-time.env && set +a && docker build --add-host coolify:10.0.1.5 --add-host coolify-db:10.0.1.4 --add-host coolify-realtime:10.0.1.2 --add-host coolify-redis:10.0.1.3 --network host -f /artifacts/x08gg0os4kcoo40wco488k80/.nixpacks/Dockerfile --progress plain -t z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build --build-arg CI --build-arg COOLIFY_BRANCH --build-arg COOLIFY_FQDN --build-arg COOLIFY_RESOURCE_UUID --build-arg COOLIFY_URL --build-arg NIXPACKS_METADATA --build-arg NIXPACKS_NODE_VERSION --build-arg NODE_ENV --build-arg NPM_CONFIG_PRODUCTION --build-arg COOLIFY_BUILD_SECRETS_HASH=f6623396b6fdeeb695ffa821a07533c56b5d3d3e0b919bbec6d16c655002059e --build-arg 'COOLIFY_URL' --build-arg 'COOLIFY_FQDN' --build-arg 'COOLIFY_BRANCH' --build-arg 'COOLIFY_RESOURCE_UUID' /artifacts/x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:37:23.052510
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'bash /artifacts/build.sh'
+2026-Jan-24 12:37:23.052510
+#0 building with "default" instance using docker driver
+2026-Jan-24 12:37:23.052510
+2026-Jan-24 12:37:23.052510
+#1 [internal] load build definition from Dockerfile
+2026-Jan-24 12:37:23.052510
+#1 transferring dockerfile: 1.22kB done
+2026-Jan-24 12:37:23.052510
+#1 DONE 0.0s
+2026-Jan-24 12:37:23.052510
+2026-Jan-24 12:37:23.052510
+#2 [internal] load metadata for ghcr.io/railwayapp/nixpacks:ubuntu-1745885067
+2026-Jan-24 12:37:24.527997
+#2 DONE 1.6s
+2026-Jan-24 12:37:24.657534
+#3 [internal] load .dockerignore
+2026-Jan-24 12:37:24.657534
+#3 transferring context: 2B done
+2026-Jan-24 12:37:24.657534
+#3 DONE 0.0s
+2026-Jan-24 12:37:24.657534
+2026-Jan-24 12:37:24.657534
+#4 [internal] load build context
+2026-Jan-24 12:37:24.657534
+#4 transferring context: 539.88kB 0.0s done
+2026-Jan-24 12:37:24.657534
+#4 DONE 0.0s
+2026-Jan-24 12:37:24.657534
+2026-Jan-24 12:37:24.657534
+#5 [stage-0 1/9] FROM ghcr.io/railwayapp/nixpacks:ubuntu-1745885067@sha256:d45c89d80e13d7ad0fd555b5130f22a866d9dd10e861f589932303ef2314c7de
+2026-Jan-24 12:37:24.657534
+#5 resolve ghcr.io/railwayapp/nixpacks:ubuntu-1745885067@sha256:d45c89d80e13d7ad0fd555b5130f22a866d9dd10e861f589932303ef2314c7de done
+2026-Jan-24 12:37:24.657534
+#5 sha256:75908e6a244aa7c07bd16c59f1a88c832d0735edf545bd28f86d6bee4a5536a0 4.43kB / 4.43kB done
+2026-Jan-24 12:37:24.657534
+#5 sha256:d45c89d80e13d7ad0fd555b5130f22a866d9dd10e861f589932303ef2314c7de 1.61kB / 1.61kB done
+2026-Jan-24 12:37:24.657534
+#5 sha256:98801a2e9c74b1236de01aa97bc99349f700f53f81d3bbab4411e2a8a9dd316d 1.06kB / 1.06kB done
+2026-Jan-24 12:37:24.657534
+#5 DONE 0.1s
+2026-Jan-24 12:37:24.657534
+2026-Jan-24 12:37:24.657534
+#6 [stage-0 2/9] WORKDIR /app/
+2026-Jan-24 12:37:24.657534
+#6 DONE 0.1s
+2026-Jan-24 12:37:24.832462
+2026-Jan-24 12:37:24.837148
+#7 [stage-0 3/9] COPY .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix
+2026-Jan-24 12:37:24.837148
+#7 DONE 0.0s
+2026-Jan-24 12:37:24.837148
+2026-Jan-24 12:37:24.837148
+#8 [stage-0 4/9] RUN nix-env -if .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix && nix-collect-garbage -d
+2026-Jan-24 12:37:24.837148
+#8 0.146 unpacking 'https://github.com/NixOS/nixpkgs/archive/ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.tar.gz' into the Git cache...
+2026-Jan-24 12:38:26.103888
+#8 61.41 unpacking 'https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz' into the Git cache...
+2026-Jan-24 12:38:27.161954
+#8 62.48 installing 'ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env'
+2026-Jan-24 12:38:29.219377
+#8 64.53 these 5 derivations will be built:
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/6vy68gykpxfphbmmyd59ya88xvrwvvaa-npm-9.9.4.tgz.drv
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/cjdjkmr6gy2h8l0cra71whgrvy030kx1-libraries.drv
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/bs6g8vhkfynvlzidhlqbsvnc9wijbaaz-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env.drv
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/w9h0z1lhfwxc0m38f3w5brfdqrzm4wyj-npm.drv
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/zr34yihblp8zqam2fjahiiddvnii8gw0-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env.drv
+2026-Jan-24 12:38:29.219377
+#8 64.53 these 78 paths will be fetched (122.32 MiB download, 581.57 MiB unpacked):
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/cf7gkacyxmm66lwl5nj6j6yykbrg4q5c-acl-2.3.2
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/a9jgnlhkjkxav6qrc3rzg2q84pkl2wvr-attr-2.5.2
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/5mh7kaj2fyv8mk4sfq1brwxgc02884wi-bash-5.2p37
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/j7p46r8v9gcpbxx89pbqlh61zhd33gzv-binutils-2.43.1
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/df2a8k58k00f2dh2x930dg6xs6g6mliv-binutils-2.43.1-lib
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/srcmmqi8kxjfygd0hyy42c8hv6cws83b-binutils-wrapper-2.43.1
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/wf5zj2gbib3gjqllkabxaw4dh0gzcla3-builder.pl
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/ivl2v8rgg7qh1jkj5pwpqycax3rc2hnl-bzip2-1.0.8
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/mglixp03lsp0w986svwdvm7vcy17rdax-bzip2-1.0.8-bin
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/4s9rah4cwaxflicsk5cndnknqlk9n4p3-coreutils-9.5
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/pkc7mb4a4qvyz73srkqh4mwl70w98dsv-curl-8.11.0
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/p123cq20klajcl9hj8jnkjip5nw6awhz-curl-8.11.0-bin
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/5f5linrxzhhb3mrclkwdpm9bd8ygldna-curl-8.11.0-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/agvks3qmzja0yj54szi3vja6vx3cwkkw-curl-8.11.0-man
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/00g69vw7c9lycy63h45ximy0wmzqx5y6-diffutils-3.10
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/74h4z8k82pmp24xryflv4lxkz8jlpqqd-ed-1.20.2
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/qbry6090vlr9ar33kdmmbq2p5apzbga8-expand-response-params
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/c4rj90r2m89rxs64hmm857mipwjhig5d-file-5.46
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/jqrz1vq5nz4lnv9pqzydj0ir58wbjfy1-findutils-4.10.0
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/a3c47r5z1q2c4rz0kvq8hlilkhx2s718-gawk-5.3.1
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/l89iqc7am6i60y8vk507zwrzxf0wcd3v-gcc-14-20241116
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/bpq1s72cw9qb2fs8mnmlw6hn2c7iy0ss-gcc-14-20241116-lib
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/17v0ywnr3akp85pvdi56gwl99ljv95kx-gcc-14-20241116-libgcc
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/xcn9p4xxfbvlkpah7pwchpav4ab9d135-gcc-wrapper-14-20241116
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/65h17wjrrlsj2rj540igylrx7fqcd6vq-glibc-2.40-36
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/1c6bmxrrhm8bd26ai2rjqld2yyjrxhds-glibc-2.40-36-bin
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/kj8hbqx4ds9qm9mq7hyikxyfwwg13kzj-glibc-2.40-36-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/kryrg7ds05iwcmy81amavk8w13y4lxbs-gmp-6.3.0
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/a2byxfv4lc8f2g5xfzw8cz5q8k05wi29-gmp-with-cxx-6.3.0
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/1m67ipsk39xvhyqrxnzv2m2p48pil8kl-gnu-config-2024-01-01
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/aap6cq56amx4mzbyxp2wpgsf1kqjcr1f-gnugrep-3.11
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/fp6cjl1zcmm6mawsnrb5yak1wkz2ma8l-gnumake-4.4.1
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/abm77lnrkrkb58z6xp1qwjcr1xgkcfwm-gnused-4.9
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/9cwwj1c9csmc85l2cqzs3h9hbf1vwl6c-gnutar-1.35
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/nvvj6sk0k6px48436drlblf4gafgbvzr-gzip-1.13
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/wwipgdqb4p2fr46kmw9c5wlk799kbl68-icu4c-74.2
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/m8w3mf0i4862q22bxad0wspkgdy4jnkk-icu4c-74.2-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/xmbv8s4p4i4dbxgkgdrdfb0ym25wh6gk-isl-0.20
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/2wh1gqyzf5xsvxpdz2k0bxiz583wwq29-keyutils-1.6.3-lib
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/milph81dilrh96isyivh5n50agpx39k2-krb5-1.21.3
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/b56mswksrql15knpb1bnhv3ysif340kd-krb5-1.21.3-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/v9c1s50x7magpiqgycxxkn36avzbcg0g-krb5-1.21.3-lib
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/34z2792zyd4ayl5186vx0s98ckdaccz9-libidn2-2.3.7
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/2a3anh8vl3fcgk0fvaravlimrqawawza-libmpc-1.3.1
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/8675pnfr4fqnwv4pzjl67hdwls4q13aa-libssh2-1.11.1
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/d7zhcrcc7q3yfbm3qkqpgc3daq82spwi-libssh2-1.11.1-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/xcqcgqazykf6s7fsn08k0blnh0wisdcl-libunistring-1.3
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/r9ac2hwnmb0nxwsrvr6gi9wsqf2whfqj-libuv-1.49.2
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/ll14czvpxglf6nnwmmrmygplm830fvlv-libuv-1.49.2-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/6cr0spsvymmrp1hj5n0kbaxw55w1lqyp-libxcrypt-4.4.36
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/pc74azbkr19rkd5bjalq2xwx86cj3cga-linux-headers-6.12
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/fv7gpnvg922frkh81w5hkdhpz0nw3iiz-mirrors-list
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/qs22aazzrdd4dnjf9vffl0n31hvls43h-mpfr-4.2.1
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/grixvx878884hy8x3xs0c0s1i00j632k-nghttp2-1.64.0
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/dz97fw51rm5bl9kz1vg0haj1j1a7r1mr-nghttp2-1.64.0-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/qcghigzrz56vczwlzg9c02vbs6zr9jkz-nghttp2-1.64.0-lib
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/fkyp1bm5gll9adnfcj92snyym524mdrj-nodejs-22.11.0
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/9l9n7a0v4aibcz0sgd0crs209an9p7dz-openssl-3.3.2
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/h1ydpxkw9qhjdxjpic1pdc2nirggyy6f-openssl-3.3.2
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/lygl27c44xv73kx1spskcgvzwq7z337c-openssl-3.3.2-bin
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/qq5q0alyzywdazhmybi7m69akz0ppk05-openssl-3.3.2-bin
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/kqm7wpqkzc4bwjlzqizcbz0mgkj06a9x-openssl-3.3.2-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/pp2zf8bdgyz60ds8vcshk2603gcjgp72-openssl-3.3.2-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/5yja5dpk2qw1v5mbfbl2d7klcdfrh90w-patch-2.7.6
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/srfxqk119fijwnprgsqvn68ys9kiw0bn-patchelf-0.15.0
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/3j1p598fivxs69wx3a657ysv3rw8k06l-pcre2-10.44
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/1i003ijlh9i0mzp6alqby5hg3090pjdx-perl-5.40.0
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/dj96qp9vps02l3n8xgc2vallqa9rhafb-sqlite-3.47.0
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/yc39wvfz87i0bl8r6vnhq48n6clbx2pb-sqlite-3.47.0-bin
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/i47d0rzbbnihcxkcaj48jgii5pj58djc-sqlite-3.47.0-dev
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/4ig84cyqi6qy4n0sanrbzsw1ixa497jx-stdenv-linux
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/d0gfdcag8bxzvg7ww4s7px4lf8sxisyx-stdenv-linux
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/d29r1bdmlvwmj52apgcdxfl1mm9c5782-update-autotools-gnu-config-scripts-hook
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/acfkqzj5qrqs88a4a6ixnybbjxja663d-xgcc-14-20241116-libgcc
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/c2njy6bv84kw1i4bjf5k5gn7gz8hn57n-xz-5.6.3
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/h18s640fnhhj2qdh5vivcfbxvz377srg-xz-5.6.3-bin
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/cqlaa2xf6lslnizyj9xqa8j0ii1yqw0x-zlib-1.3.1
+2026-Jan-24 12:38:29.219377
+#8 64.53   /nix/store/1lggwqzapn5mn49l9zy4h566ysv9kzdb-zlib-1.3.1-dev
+2026-Jan-24 12:38:29.445295
+#8 64.56 copying path '/nix/store/wf5zj2gbib3gjqllkabxaw4dh0gzcla3-builder.pl' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.56 copying path '/nix/store/17v0ywnr3akp85pvdi56gwl99ljv95kx-gcc-14-20241116-libgcc' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.56 copying path '/nix/store/1m67ipsk39xvhyqrxnzv2m2p48pil8kl-gnu-config-2024-01-01' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.57 copying path '/nix/store/acfkqzj5qrqs88a4a6ixnybbjxja663d-xgcc-14-20241116-libgcc' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.57 copying path '/nix/store/xcqcgqazykf6s7fsn08k0blnh0wisdcl-libunistring-1.3' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.57 copying path '/nix/store/pc74azbkr19rkd5bjalq2xwx86cj3cga-linux-headers-6.12' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.57 copying path '/nix/store/fv7gpnvg922frkh81w5hkdhpz0nw3iiz-mirrors-list' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.57 copying path '/nix/store/agvks3qmzja0yj54szi3vja6vx3cwkkw-curl-8.11.0-man' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.57 copying path '/nix/store/grixvx878884hy8x3xs0c0s1i00j632k-nghttp2-1.64.0' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.62 copying path '/nix/store/d29r1bdmlvwmj52apgcdxfl1mm9c5782-update-autotools-gnu-config-scripts-hook' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.445295
+#8 64.76 copying path '/nix/store/34z2792zyd4ayl5186vx0s98ckdaccz9-libidn2-2.3.7' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:29.614446
+#8 64.93 copying path '/nix/store/65h17wjrrlsj2rj540igylrx7fqcd6vq-glibc-2.40-36' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.741979
+#8 66.05 copying path '/nix/store/a9jgnlhkjkxav6qrc3rzg2q84pkl2wvr-attr-2.5.2' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.741979
+#8 66.05 copying path '/nix/store/5mh7kaj2fyv8mk4sfq1brwxgc02884wi-bash-5.2p37' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.741979
+#8 66.05 copying path '/nix/store/ivl2v8rgg7qh1jkj5pwpqycax3rc2hnl-bzip2-1.0.8' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.741979
+#8 66.05 copying path '/nix/store/74h4z8k82pmp24xryflv4lxkz8jlpqqd-ed-1.20.2' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.05 copying path '/nix/store/1c6bmxrrhm8bd26ai2rjqld2yyjrxhds-glibc-2.40-36-bin' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.05 copying path '/nix/store/kryrg7ds05iwcmy81amavk8w13y4lxbs-gmp-6.3.0' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.05 copying path '/nix/store/qbry6090vlr9ar33kdmmbq2p5apzbga8-expand-response-params' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.06 copying path '/nix/store/bpq1s72cw9qb2fs8mnmlw6hn2c7iy0ss-gcc-14-20241116-lib' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.06 copying path '/nix/store/fp6cjl1zcmm6mawsnrb5yak1wkz2ma8l-gnumake-4.4.1' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.06 copying path '/nix/store/abm77lnrkrkb58z6xp1qwjcr1xgkcfwm-gnused-4.9' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.06 copying path '/nix/store/2wh1gqyzf5xsvxpdz2k0bxiz583wwq29-keyutils-1.6.3-lib' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.06 copying path '/nix/store/r9ac2hwnmb0nxwsrvr6gi9wsqf2whfqj-libuv-1.49.2' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.06 copying path '/nix/store/6cr0spsvymmrp1hj5n0kbaxw55w1lqyp-libxcrypt-4.4.36' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.06 copying path '/nix/store/a3c47r5z1q2c4rz0kvq8hlilkhx2s718-gawk-5.3.1' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.06 copying path '/nix/store/9l9n7a0v4aibcz0sgd0crs209an9p7dz-openssl-3.3.2' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.06 copying path '/nix/store/qcghigzrz56vczwlzg9c02vbs6zr9jkz-nghttp2-1.64.0-lib' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.11 copying path '/nix/store/h1ydpxkw9qhjdxjpic1pdc2nirggyy6f-openssl-3.3.2' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.13 copying path '/nix/store/cf7gkacyxmm66lwl5nj6j6yykbrg4q5c-acl-2.3.2' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.14 copying path '/nix/store/3j1p598fivxs69wx3a657ysv3rw8k06l-pcre2-10.44' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.14 copying path '/nix/store/mglixp03lsp0w986svwdvm7vcy17rdax-bzip2-1.0.8-bin' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.14 copying path '/nix/store/5yja5dpk2qw1v5mbfbl2d7klcdfrh90w-patch-2.7.6' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.15 copying path '/nix/store/c2njy6bv84kw1i4bjf5k5gn7gz8hn57n-xz-5.6.3' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:30.878590
+#8 66.19 copying path '/nix/store/cqlaa2xf6lslnizyj9xqa8j0ii1yqw0x-zlib-1.3.1' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.056154
+#8 66.29 copying path '/nix/store/xmbv8s4p4i4dbxgkgdrdfb0ym25wh6gk-isl-0.20' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.056154
+#8 66.29 copying path '/nix/store/qs22aazzrdd4dnjf9vffl0n31hvls43h-mpfr-4.2.1' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.056154
+#8 66.37 copying path '/nix/store/ll14czvpxglf6nnwmmrmygplm830fvlv-libuv-1.49.2-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.203655
+#8 66.38 copying path '/nix/store/dz97fw51rm5bl9kz1vg0haj1j1a7r1mr-nghttp2-1.64.0-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.203655
+#8 66.38 copying path '/nix/store/kj8hbqx4ds9qm9mq7hyikxyfwwg13kzj-glibc-2.40-36-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.203655
+#8 66.39 copying path '/nix/store/df2a8k58k00f2dh2x930dg6xs6g6mliv-binutils-2.43.1-lib' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.203655
+#8 66.42 copying path '/nix/store/c4rj90r2m89rxs64hmm857mipwjhig5d-file-5.46' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.203655
+#8 66.47 copying path '/nix/store/9cwwj1c9csmc85l2cqzs3h9hbf1vwl6c-gnutar-1.35' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.203655
+#8 66.52 copying path '/nix/store/yc39wvfz87i0bl8r6vnhq48n6clbx2pb-sqlite-3.47.0-bin' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.203655
+#8 66.52 copying path '/nix/store/dj96qp9vps02l3n8xgc2vallqa9rhafb-sqlite-3.47.0' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.487270
+#8 66.80 copying path '/nix/store/2a3anh8vl3fcgk0fvaravlimrqawawza-libmpc-1.3.1' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.669866
+#8 66.80 copying path '/nix/store/1lggwqzapn5mn49l9zy4h566ysv9kzdb-zlib-1.3.1-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.677441
+#8 66.80 copying path '/nix/store/nvvj6sk0k6px48436drlblf4gafgbvzr-gzip-1.13' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.677441
+#8 66.82 copying path '/nix/store/aap6cq56amx4mzbyxp2wpgsf1kqjcr1f-gnugrep-3.11' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.677441
+#8 66.83 copying path '/nix/store/h18s640fnhhj2qdh5vivcfbxvz377srg-xz-5.6.3-bin' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.757297
+#8 67.07 copying path '/nix/store/i47d0rzbbnihcxkcaj48jgii5pj58djc-sqlite-3.47.0-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.859378
+#8 67.14 copying path '/nix/store/lygl27c44xv73kx1spskcgvzwq7z337c-openssl-3.3.2-bin' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.859378
+#8 67.17 copying path '/nix/store/v9c1s50x7magpiqgycxxkn36avzbcg0g-krb5-1.21.3-lib' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.859378
+#8 67.17 copying path '/nix/store/qq5q0alyzywdazhmybi7m69akz0ppk05-openssl-3.3.2-bin' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:31.859378
+#8 67.17 copying path '/nix/store/8675pnfr4fqnwv4pzjl67hdwls4q13aa-libssh2-1.11.1' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.022476
+#8 67.20 copying path '/nix/store/j7p46r8v9gcpbxx89pbqlh61zhd33gzv-binutils-2.43.1' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.030558
+#8 67.20 copying path '/nix/store/a2byxfv4lc8f2g5xfzw8cz5q8k05wi29-gmp-with-cxx-6.3.0' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.030558
+#8 67.20 copying path '/nix/store/srfxqk119fijwnprgsqvn68ys9kiw0bn-patchelf-0.15.0' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.030558
+#8 67.20 copying path '/nix/store/wwipgdqb4p2fr46kmw9c5wlk799kbl68-icu4c-74.2' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.030558
+#8 67.21 copying path '/nix/store/l89iqc7am6i60y8vk507zwrzxf0wcd3v-gcc-14-20241116' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.030558
+#8 67.26 copying path '/nix/store/pp2zf8bdgyz60ds8vcshk2603gcjgp72-openssl-3.3.2-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.030558
+#8 67.34 copying path '/nix/store/kqm7wpqkzc4bwjlzqizcbz0mgkj06a9x-openssl-3.3.2-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.235410
+#8 67.35 copying path '/nix/store/pkc7mb4a4qvyz73srkqh4mwl70w98dsv-curl-8.11.0' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.235410
+#8 67.36 copying path '/nix/store/milph81dilrh96isyivh5n50agpx39k2-krb5-1.21.3' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.235410
+#8 67.40 copying path '/nix/store/4s9rah4cwaxflicsk5cndnknqlk9n4p3-coreutils-9.5' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.654869
+#8 67.97 copying path '/nix/store/p123cq20klajcl9hj8jnkjip5nw6awhz-curl-8.11.0-bin' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.853064
+#8 68.16 copying path '/nix/store/b56mswksrql15knpb1bnhv3ysif340kd-krb5-1.21.3-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:32.952170
+#8 68.26 copying path '/nix/store/00g69vw7c9lycy63h45ximy0wmzqx5y6-diffutils-3.10' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:33.119823
+#8 68.27 copying path '/nix/store/jqrz1vq5nz4lnv9pqzydj0ir58wbjfy1-findutils-4.10.0' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:33.119823
+#8 68.27 copying path '/nix/store/1i003ijlh9i0mzp6alqby5hg3090pjdx-perl-5.40.0' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:33.119823
+#8 68.28 copying path '/nix/store/d7zhcrcc7q3yfbm3qkqpgc3daq82spwi-libssh2-1.11.1-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:33.429663
+#8 68.74 copying path '/nix/store/5f5linrxzhhb3mrclkwdpm9bd8ygldna-curl-8.11.0-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:33.817595
+#8 69.13 copying path '/nix/store/4ig84cyqi6qy4n0sanrbzsw1ixa497jx-stdenv-linux' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:34.467387
+#8 69.78 building '/nix/store/cjdjkmr6gy2h8l0cra71whgrvy030kx1-libraries.drv'...
+2026-Jan-24 12:38:34.864421
+#8 70.18 building '/nix/store/6vy68gykpxfphbmmyd59ya88xvrwvvaa-npm-9.9.4.tgz.drv'...
+2026-Jan-24 12:38:35.021243
+#8 70.18 copying path '/nix/store/srcmmqi8kxjfygd0hyy42c8hv6cws83b-binutils-wrapper-2.43.1' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:36.120406
+#8 71.43 building '/nix/store/bs6g8vhkfynvlzidhlqbsvnc9wijbaaz-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env.drv'...
+2026-Jan-24 12:38:36.221870
+#8 71.44 copying path '/nix/store/m8w3mf0i4862q22bxad0wspkgdy4jnkk-icu4c-74.2-dev' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:36.221870
+#8 71.54
+2026-Jan-24 12:38:36.399857
+#8 71.54 trying https://registry.npmjs.org/npm/-/npm-9.9.4.tgz
+2026-Jan-24 12:38:36.399857
+#8 71.56   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2026-Jan-24 12:38:36.399857
+#8 71.56                                  Dload  Upload   Total   Spent    Left  Speed
+2026-Jan-24 12:38:36.488351
+#8 71.80 copying path '/nix/store/fkyp1bm5gll9adnfcj92snyym524mdrj-nodejs-22.11.0' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:37.062352
+#8 72.38 100 2648k  100 2648k    0     0  3229k      0 --:--:-- --:--:-- --:--:-- 3237k
+2026-Jan-24 12:38:40.964670
+#8 76.28 copying path '/nix/store/xcn9p4xxfbvlkpah7pwchpav4ab9d135-gcc-wrapper-14-20241116' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:41.142216
+#8 76.35 copying path '/nix/store/d0gfdcag8bxzvg7ww4s7px4lf8sxisyx-stdenv-linux' from 'https://cache.nixos.org'...
+2026-Jan-24 12:38:41.142216
+#8 76.46 building '/nix/store/w9h0z1lhfwxc0m38f3w5brfdqrzm4wyj-npm.drv'...
+2026-Jan-24 12:38:41.388677
+#8 76.54 Running phase: unpackPhase
+2026-Jan-24 12:38:41.388677
+#8 76.55 unpacking source archive /nix/store/fkd1ma3nify8r9wp463yg5rqz9hdcyf1-npm-9.9.4.tgz
+2026-Jan-24 12:38:41.551581
+#8 76.86 source root is package
+2026-Jan-24 12:38:41.570791
+2026-Jan-24 12:38:41.676372
+#8 76.99 setting SOURCE_DATE_EPOCH to timestamp 499162500 of file package/package.json
+2026-Jan-24 12:38:41.681947
+2026-Jan-24 12:38:41.837481
+#8 77.00 Running phase: installPhase
+2026-Jan-24 12:38:43.382403
+#8 78.70 building '/nix/store/zr34yihblp8zqam2fjahiiddvnii8gw0-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env.drv'...
+2026-Jan-24 12:38:43.497971
+#8 78.81 created 33 symlinks in user environment
+2026-Jan-24 12:38:43.781987
+#8 79.10 building '/nix/store/540448vk4llinjrj8arqg9x2kb5l721g-user-environment.drv'...
+2026-Jan-24 12:38:43.785869
+2026-Jan-24 12:38:44.109942
+#8 79.42 removing old generations of profile /nix/var/nix/profiles/per-user/root/channels
+2026-Jan-24 12:38:44.232250
+#8 79.42 removing old generations of profile /nix/var/nix/profiles/per-user/root/profile
+2026-Jan-24 12:38:44.237600
+#8 79.42 removing profile version 1
+2026-Jan-24 12:38:44.237600
+#8 79.42 removing old generations of profile /nix/var/nix/profiles/per-user/root/channels
+2026-Jan-24 12:38:44.237600
+#8 79.42 removing old generations of profile /nix/var/nix/profiles/per-user/root/profile
+2026-Jan-24 12:38:44.237600
+#8 79.43 finding garbage collector roots...
+2026-Jan-24 12:38:44.237600
+#8 79.43 removing stale link from '/nix/var/nix/gcroots/auto/lzjbmb2ry0z7lma2fvpqprb12921pnb5' to '/nix/var/nix/profiles/per-user/root/profile-1-link'
+2026-Jan-24 12:38:44.237600
+#8 79.44 deleting garbage...
+2026-Jan-24 12:38:44.237600
+#8 79.44 deleting '/nix/store/a9qf4wwhympzs35ncp80r185j6a21w07-user-environment'
+2026-Jan-24 12:38:44.237600
+#8 79.45 deleting '/nix/store/253kwn1730vnay87xkjgxa2v97w3y079-user-environment.drv'
+2026-Jan-24 12:38:44.237600
+#8 79.45 deleting '/nix/store/hn5mrh362n52x8wwab9s1v6bgn4n5c94-env-manifest.nix'
+2026-Jan-24 12:38:44.237600
+#8 79.47 deleting '/nix/store/d0gfdcag8bxzvg7ww4s7px4lf8sxisyx-stdenv-linux'
+2026-Jan-24 12:38:44.237600
+#8 79.47 deleting '/nix/store/xcn9p4xxfbvlkpah7pwchpav4ab9d135-gcc-wrapper-14-20241116'
+2026-Jan-24 12:38:44.237600
+#8 79.47 deleting '/nix/store/srcmmqi8kxjfygd0hyy42c8hv6cws83b-binutils-wrapper-2.43.1'
+2026-Jan-24 12:38:44.237600
+#8 79.47 deleting '/nix/store/5f5linrxzhhb3mrclkwdpm9bd8ygldna-curl-8.11.0-dev'
+2026-Jan-24 12:38:44.237600
+#8 79.47 deleting '/nix/store/dz97fw51rm5bl9kz1vg0haj1j1a7r1mr-nghttp2-1.64.0-dev'
+2026-Jan-24 12:38:44.237600
+#8 79.47 deleting '/nix/store/1i003ijlh9i0mzp6alqby5hg3090pjdx-perl-5.40.0'
+2026-Jan-24 12:38:44.237600
+#8 79.55 deleting '/nix/store/6cr0spsvymmrp1hj5n0kbaxw55w1lqyp-libxcrypt-4.4.36'
+2026-Jan-24 12:38:44.410458
+#8 79.55 deleting '/nix/store/4ig84cyqi6qy4n0sanrbzsw1ixa497jx-stdenv-linux'
+2026-Jan-24 12:38:44.410458
+#8 79.55 deleting '/nix/store/c4rj90r2m89rxs64hmm857mipwjhig5d-file-5.46'
+2026-Jan-24 12:38:44.410458
+#8 79.55 deleting '/nix/store/a3c47r5z1q2c4rz0kvq8hlilkhx2s718-gawk-5.3.1'
+2026-Jan-24 12:38:44.410458
+#8 79.56 deleting '/nix/store/nvvj6sk0k6px48436drlblf4gafgbvzr-gzip-1.13'
+2026-Jan-24 12:38:44.410458
+#8 79.56 deleting '/nix/store/h18s640fnhhj2qdh5vivcfbxvz377srg-xz-5.6.3-bin'
+2026-Jan-24 12:38:44.410458
+#8 79.56 deleting '/nix/store/c2njy6bv84kw1i4bjf5k5gn7gz8hn57n-xz-5.6.3'
+2026-Jan-24 12:38:44.410458
+#8 79.56 deleting '/nix/store/5yja5dpk2qw1v5mbfbl2d7klcdfrh90w-patch-2.7.6'
+2026-Jan-24 12:38:44.410458
+#8 79.56 deleting '/nix/store/aap6cq56amx4mzbyxp2wpgsf1kqjcr1f-gnugrep-3.11'
+2026-Jan-24 12:38:44.410458
+#8 79.57 deleting '/nix/store/lwi59jcfwk2lnrakmm1y5vw85hj3n1bi-source'
+2026-Jan-24 12:38:52.149443
+#8 87.46 deleting '/nix/store/d7zhcrcc7q3yfbm3qkqpgc3daq82spwi-libssh2-1.11.1-dev'
+2026-Jan-24 12:38:52.249177
+#8 87.46 deleting '/nix/store/p123cq20klajcl9hj8jnkjip5nw6awhz-curl-8.11.0-bin'
+2026-Jan-24 12:38:52.249177
+#8 87.46 deleting '/nix/store/pkc7mb4a4qvyz73srkqh4mwl70w98dsv-curl-8.11.0'
+2026-Jan-24 12:38:52.249177
+#8 87.46 deleting '/nix/store/8675pnfr4fqnwv4pzjl67hdwls4q13aa-libssh2-1.11.1'
+2026-Jan-24 12:38:52.249177
+#8 87.46 deleting '/nix/store/1c0dv2pdlshjz5kmjd4dfp3c96yncr23-libraries'
+2026-Jan-24 12:38:52.249177
+#8 87.46 deleting '/nix/store/kqm7wpqkzc4bwjlzqizcbz0mgkj06a9x-openssl-3.3.2-dev'
+2026-Jan-24 12:38:52.249177
+#8 87.47 deleting '/nix/store/qq5q0alyzywdazhmybi7m69akz0ppk05-openssl-3.3.2-bin'
+2026-Jan-24 12:38:52.249177
+#8 87.47 deleting '/nix/store/b56mswksrql15knpb1bnhv3ysif340kd-krb5-1.21.3-dev'
+2026-Jan-24 12:38:52.249177
+#8 87.47 deleting '/nix/store/milph81dilrh96isyivh5n50agpx39k2-krb5-1.21.3'
+2026-Jan-24 12:38:52.249177
+#8 87.47 deleting '/nix/store/v9c1s50x7magpiqgycxxkn36avzbcg0g-krb5-1.21.3-lib'
+2026-Jan-24 12:38:52.249177
+#8 87.47 deleting '/nix/store/9l9n7a0v4aibcz0sgd0crs209an9p7dz-openssl-3.3.2'
+2026-Jan-24 12:38:52.249177
+#8 87.48 deleting '/nix/store/d29r1bdmlvwmj52apgcdxfl1mm9c5782-update-autotools-gnu-config-scripts-hook'
+2026-Jan-24 12:38:52.249177
+#8 87.48 deleting '/nix/store/1m67ipsk39xvhyqrxnzv2m2p48pil8kl-gnu-config-2024-01-01'
+2026-Jan-24 12:38:52.249177
+#8 87.48 deleting '/nix/store/fkd1ma3nify8r9wp463yg5rqz9hdcyf1-npm-9.9.4.tgz'
+2026-Jan-24 12:38:52.249177
+#8 87.48 deleting '/nix/store/fv7gpnvg922frkh81w5hkdhpz0nw3iiz-mirrors-list'
+2026-Jan-24 12:38:52.249177
+#8 87.48 deleting '/nix/store/3j1p598fivxs69wx3a657ysv3rw8k06l-pcre2-10.44'
+2026-Jan-24 12:38:52.249177
+#8 87.48 deleting '/nix/store/wf5zj2gbib3gjqllkabxaw4dh0gzcla3-builder.pl'
+2026-Jan-24 12:38:52.249177
+#8 87.48 deleting '/nix/store/grixvx878884hy8x3xs0c0s1i00j632k-nghttp2-1.64.0'
+2026-Jan-24 12:38:52.249177
+#8 87.48 deleting '/nix/store/l89iqc7am6i60y8vk507zwrzxf0wcd3v-gcc-14-20241116'
+2026-Jan-24 12:38:52.249177
+#8 87.53 deleting '/nix/store/xmbv8s4p4i4dbxgkgdrdfb0ym25wh6gk-isl-0.20'
+2026-Jan-24 12:38:52.249177
+#8 87.53 deleting '/nix/store/2a3anh8vl3fcgk0fvaravlimrqawawza-libmpc-1.3.1'
+2026-Jan-24 12:38:52.249177
+#8 87.53 deleting '/nix/store/qs22aazzrdd4dnjf9vffl0n31hvls43h-mpfr-4.2.1'
+2026-Jan-24 12:38:52.249177
+#8 87.53 deleting '/nix/store/kryrg7ds05iwcmy81amavk8w13y4lxbs-gmp-6.3.0'
+2026-Jan-24 12:38:52.249177
+#8 87.53 deleting '/nix/store/kj8hbqx4ds9qm9mq7hyikxyfwwg13kzj-glibc-2.40-36-dev'
+2026-Jan-24 12:38:52.249177
+#8 87.54 deleting '/nix/store/1c6bmxrrhm8bd26ai2rjqld2yyjrxhds-glibc-2.40-36-bin'
+2026-Jan-24 12:38:52.249177
+#8 87.54 deleting '/nix/store/mglixp03lsp0w986svwdvm7vcy17rdax-bzip2-1.0.8-bin'
+2026-Jan-24 12:38:52.249177
+#8 87.55 deleting '/nix/store/jqrz1vq5nz4lnv9pqzydj0ir58wbjfy1-findutils-4.10.0'
+2026-Jan-24 12:38:52.249177
+#8 87.55 deleting '/nix/store/00g69vw7c9lycy63h45ximy0wmzqx5y6-diffutils-3.10'
+2026-Jan-24 12:38:52.249177
+#8 87.56 deleting '/nix/store/w03v94xpvkni794qvd12x2l76gyhm9wv-source'
+2026-Jan-24 12:38:52.249177
+#8 87.56 deleting '/nix/store/qbry6090vlr9ar33kdmmbq2p5apzbga8-expand-response-params'
+2026-Jan-24 12:38:52.467140
+#8 87.56 deleting '/nix/store/j7p46r8v9gcpbxx89pbqlh61zhd33gzv-binutils-2.43.1'
+2026-Jan-24 12:38:52.467140
+#8 87.58 deleting '/nix/store/df2a8k58k00f2dh2x930dg6xs6g6mliv-binutils-2.43.1-lib'
+2026-Jan-24 12:38:52.467140
+#8 87.58 deleting '/nix/store/ivl2v8rgg7qh1jkj5pwpqycax3rc2hnl-bzip2-1.0.8'
+2026-Jan-24 12:38:52.467140
+#8 87.58 deleting '/nix/store/2wh1gqyzf5xsvxpdz2k0bxiz583wwq29-keyutils-1.6.3-lib'
+2026-Jan-24 12:38:52.472426
+#8 87.58 deleting '/nix/store/agvks3qmzja0yj54szi3vja6vx3cwkkw-curl-8.11.0-man'
+2026-Jan-24 12:38:52.472426
+#8 87.58 deleting '/nix/store/abm77lnrkrkb58z6xp1qwjcr1xgkcfwm-gnused-4.9'
+2026-Jan-24 12:38:52.472426
+#8 87.59 deleting '/nix/store/srfxqk119fijwnprgsqvn68ys9kiw0bn-patchelf-0.15.0'
+2026-Jan-24 12:38:52.472426
+#8 87.59 deleting '/nix/store/qcghigzrz56vczwlzg9c02vbs6zr9jkz-nghttp2-1.64.0-lib'
+2026-Jan-24 12:38:52.472426
+#8 87.59 deleting '/nix/store/9cwwj1c9csmc85l2cqzs3h9hbf1vwl6c-gnutar-1.35'
+2026-Jan-24 12:38:52.472426
+#8 87.59 deleting '/nix/store/fp6cjl1zcmm6mawsnrb5yak1wkz2ma8l-gnumake-4.4.1'
+2026-Jan-24 12:38:52.472426
+#8 87.60 deleting '/nix/store/74h4z8k82pmp24xryflv4lxkz8jlpqqd-ed-1.20.2'
+2026-Jan-24 12:38:52.472426
+#8 87.60 deleting '/nix/store/pc74azbkr19rkd5bjalq2xwx86cj3cga-linux-headers-6.12'
+2026-Jan-24 12:38:52.472426
+#8 87.63 deleting unused links...
+2026-Jan-24 12:38:56.553259
+#8 91.87 note: currently hard linking saves 2.91 MiB
+2026-Jan-24 12:38:56.745446
+#8 91.91 61 store paths deleted, 559.41 MiB freed
+2026-Jan-24 12:38:56.757987
+#8 DONE 92.1s
+2026-Jan-24 12:38:56.915400
+#9 [stage-0 5/9] RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends curl wget
+2026-Jan-24 12:38:57.427784
+#9 0.662 Get:1 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+2026-Jan-24 12:38:57.593245
+#9 0.677 Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-Jan-24 12:38:57.707442
+#9 0.943 Get:3 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1776 kB]
+2026-Jan-24 12:38:57.714277
+2026-Jan-24 12:38:57.815776
+#9 0.973 Get:4 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-Jan-24 12:38:57.815776
+#9 1.051 Get:5 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-Jan-24 12:38:57.920715
+#9 1.125 Get:6 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [33.8 kB]
+2026-Jan-24 12:38:57.920715
+#9 1.135 Get:7 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1193 kB]
+2026-Jan-24 12:38:57.920715
+#9 1.135 Get:8 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
+2026-Jan-24 12:38:57.920715
+#9 1.156 Get:9 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2919 kB]
+2026-Jan-24 12:38:58.087242
+#9 1.172 Get:10 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
+2026-Jan-24 12:38:58.592569
+#9 1.827 Get:11 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
+2026-Jan-24 12:38:58.592569
+#9 1.827 Get:12 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
+2026-Jan-24 12:38:58.705853
+#9 1.868 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [53.5 kB]
+2026-Jan-24 12:38:58.705853
+#9 1.868 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [3169 kB]
+2026-Jan-24 12:38:58.705853
+#9 1.941 Get:15 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1966 kB]
+2026-Jan-24 12:38:58.813199
+#9 1.991 Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [2149 kB]
+2026-Jan-24 12:38:58.813199
+#9 2.044 Get:17 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [34.6 kB]
+2026-Jan-24 12:38:58.960718
+#9 2.047 Get:18 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [49.5 kB]
+2026-Jan-24 12:38:58.967595
+2026-Jan-24 12:38:59.955494
+#9 3.186 Fetched 35.6 MB in 3s (12.7 MB/s)
+2026-Jan-24 12:38:59.955494
+#9 3.186 Reading package lists...
+2026-Jan-24 12:39:02.028281
+2026-Jan-24 12:39:02.252208
+#9 5.336 Reading package lists...
+2026-Jan-24 12:39:03.862121
+2026-Jan-24 12:39:04.048487
+#9 7.128 Building dependency tree...
+2026-Jan-24 12:39:04.413459
+2026-Jan-24 12:39:04.563617
+#9 7.648 Reading state information...
+2026-Jan-24 12:39:05.163117
+#9 8.397 curl is already the newest version (8.5.0-2ubuntu10.6).
+2026-Jan-24 12:39:05.163117
+#9 8.397 The following NEW packages will be installed:
+2026-Jan-24 12:39:05.163117
+#9 8.397   wget
+2026-Jan-24 12:39:05.326708
+#9 8.563 0 upgraded, 1 newly installed, 0 to remove and 41 not upgraded.
+2026-Jan-24 12:39:05.326708
+#9 8.563 Need to get 334 kB of archives.
+2026-Jan-24 12:39:05.326708
+#9 8.563 After this operation, 938 kB of additional disk space will be used.
+2026-Jan-24 12:39:05.326708
+#9 8.563 Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 wget amd64 1.21.4-1ubuntu4.1 [334 kB]
+2026-Jan-24 12:39:05.887162
+#9 9.123 debconf: delaying package configuration, since apt-utils is not installed
+2026-Jan-24 12:39:06.010542
+#9 9.200 Fetched 334 kB in 0s (762 kB/s)
+2026-Jan-24 12:39:06.010542
+#9 9.244 Selecting previously unselected package wget.
+2026-Jan-24 12:39:06.010542
+#9 9.244 (Reading database ...
+2026-Jan-24 12:39:06.129408
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 9511 files and directories currently installed.)
+2026-Jan-24 12:39:06.129408
+#9 9.293 Preparing to unpack .../wget_1.21.4-1ubuntu4.1_amd64.deb ...
+2026-Jan-24 12:39:06.129408
+#9 9.295 Unpacking wget (1.21.4-1ubuntu4.1) ...
+2026-Jan-24 12:39:06.129408
+#9 9.365 Setting up wget (1.21.4-1ubuntu4.1) ...
+2026-Jan-24 12:39:06.229038
+#9 DONE 9.5s
+2026-Jan-24 12:39:06.229038
+2026-Jan-24 12:39:06.229038
+#10 [stage-0 6/9] COPY . /app/.
+2026-Jan-24 12:39:06.422362
+#10 DONE 0.0s
+2026-Jan-24 12:39:06.422362
+2026-Jan-24 12:39:06.422362
+#11 [stage-0 7/9] RUN --mount=type=cache,id=z8o04c8c844o4cs4sooswg00-/root/npm,target=/root/.npm npm ci
+2026-Jan-24 12:39:06.565908
+#11 0.295 npm warn config production Use `--omit=dev` instead.
+2026-Jan-24 12:39:08.042206
+#11 1.770
+2026-Jan-24 12:39:08.042206
+#11 1.770 added 9 packages, and audited 10 packages in 2s
+2026-Jan-24 12:39:08.201187
+#11 1.773
+2026-Jan-24 12:39:08.201187
+#11 1.773 1 high severity vulnerability
+2026-Jan-24 12:39:08.201187
+#11 1.773
+2026-Jan-24 12:39:08.201187
+#11 1.773 Some issues need review, and may require choosing
+2026-Jan-24 12:39:08.201187
+#11 1.773 a different dependency.
+2026-Jan-24 12:39:08.201187
+#11 1.773
+2026-Jan-24 12:39:08.201187
+#11 1.773 Run `npm audit` for details.
+2026-Jan-24 12:39:08.201187
+#11 DONE 1.8s
+2026-Jan-24 12:39:08.201187
+2026-Jan-24 12:39:08.201187
+#12 [stage-0 8/9] RUN printf '\nPATH=/app/node_modules/.bin:$PATH' >> /root/.profile
+2026-Jan-24 12:39:08.201187
+#12 DONE 0.1s
+2026-Jan-24 12:39:08.415628
+#13 [stage-0 9/9] COPY . /app
+2026-Jan-24 12:39:08.415628
+#13 DONE 0.0s
+2026-Jan-24 12:39:08.415628
+2026-Jan-24 12:39:08.415628
+#14 exporting to image
+2026-Jan-24 12:39:08.415628
+#14 exporting layers
+2026-Jan-24 12:39:10.745965
+#14 exporting layers 2.5s done
+2026-Jan-24 12:39:10.807066
+#14 writing image sha256:c695f8bad5578519955b2150ddf5ded0ec90efbfd75d84233c2c6bd90369dbc9 done
+2026-Jan-24 12:39:10.807066
+#14 naming to docker.io/library/z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build done
+2026-Jan-24 12:39:10.807066
+#14 DONE 2.5s
+2026-Jan-24 12:39:10.824058
+1 warning found (use docker --debug to expand):
+2026-Jan-24 12:39:10.824058
+- UndefinedVar: Usage of undefined variable '$NIXPACKS_PATH' (line 18)
+2026-Jan-24 12:39:11.974696
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'cat /artifacts/build.sh'
+2026-Jan-24 12:39:11.974696
+cd /artifacts/x08gg0os4kcoo40wco488k80 && set -a && source /artifacts/build-time.env && set +a && docker build --add-host coolify:10.0.1.5 --add-host coolify-db:10.0.1.4 --add-host coolify-realtime:10.0.1.2 --add-host coolify-redis:10.0.1.3 --network host -f /artifacts/x08gg0os4kcoo40wco488k80/Dockerfile --build-arg CI --build-arg COOLIFY_BRANCH --build-arg COOLIFY_FQDN --build-arg COOLIFY_RESOURCE_UUID --build-arg COOLIFY_URL --build-arg NIXPACKS_METADATA --build-arg NIXPACKS_NODE_VERSION --build-arg NODE_ENV --build-arg NPM_CONFIG_PRODUCTION --build-arg COOLIFY_BUILD_SECRETS_HASH=f6623396b6fdeeb695ffa821a07533c56b5d3d3e0b919bbec6d16c655002059e --build-arg 'COOLIFY_URL' --build-arg 'COOLIFY_FQDN' --build-arg 'COOLIFY_BRANCH' --build-arg 'COOLIFY_RESOURCE_UUID' --progress plain -t z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad /artifacts/x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:39:12.549899
+[CMD]: docker exec x08gg0os4kcoo40wco488k80 bash -c 'bash /artifacts/build.sh'
+2026-Jan-24 12:39:12.549899
+#0 building with "default" instance using docker driver
+2026-Jan-24 12:39:12.549899
+2026-Jan-24 12:39:12.549899
+#1 [internal] load build definition from Dockerfile
+2026-Jan-24 12:39:12.549899
+#1 transferring dockerfile: 284B done
+2026-Jan-24 12:39:12.549899
+#1 DONE 0.0s
+2026-Jan-24 12:39:12.549899
+2026-Jan-24 12:39:12.549899
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+2026-Jan-24 12:39:12.549899
+#2 DONE 0.0s
+2026-Jan-24 12:39:12.549899
+2026-Jan-24 12:39:12.549899
+#3 [internal] load metadata for docker.io/library/z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build
+2026-Jan-24 12:39:12.549899
+#3 DONE 0.0s
+2026-Jan-24 12:39:12.549899
+2026-Jan-24 12:39:12.549899
+#4 [internal] load .dockerignore
+2026-Jan-24 12:39:12.549899
+#4 transferring context: 2B done
+2026-Jan-24 12:39:12.549899
+#4 DONE 0.0s
+2026-Jan-24 12:39:12.549899
+2026-Jan-24 12:39:12.549899
+#5 [internal] load build context
+2026-Jan-24 12:39:12.549899
+#5 transferring context: 525B done
+2026-Jan-24 12:39:12.549899
+#5 DONE 0.0s
+2026-Jan-24 12:39:12.549899
+2026-Jan-24 12:39:12.549899
+#6 [stage-0 1/4] FROM docker.io/library/nginx:alpine
+2026-Jan-24 12:39:12.549899
+#6 DONE 0.1s
+2026-Jan-24 12:39:12.549899
+2026-Jan-24 12:39:12.549899
+#7 [stage-0 2/4] WORKDIR /usr/share/nginx/html/
+2026-Jan-24 12:39:12.549899
+#7 DONE 0.0s
+2026-Jan-24 12:39:12.549899
+2026-Jan-24 12:39:12.549899
+#8 FROM docker.io/library/z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build
+2026-Jan-24 12:39:12.599084
+#8 DONE 0.1s
+2026-Jan-24 12:39:12.599084
+2026-Jan-24 12:39:12.599084
+#9 [stage-0 3/4] COPY --from=z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build /app/dist .
+2026-Jan-24 12:39:12.599084
+#9 ERROR: failed to calculate checksum of ref bf82688d-71de-4f65-aa98-fae8295cee86::wcx6jph7s8lgpcc2g73bcfr7h: "/app/dist": not found
+2026-Jan-24 12:39:12.599084
+------
+2026-Jan-24 12:39:12.599084
+> [stage-0 3/4] COPY --from=z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build /app/dist .:
+2026-Jan-24 12:39:12.599084
+------
+2026-Jan-24 12:39:12.608084
+Dockerfile:4
+2026-Jan-24 12:39:12.608084
+--------------------
+2026-Jan-24 12:39:12.608084
+2 |     WORKDIR /usr/share/nginx/html/
+2026-Jan-24 12:39:12.608084
+3 |     LABEL coolify.deploymentId=x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:39:12.608084
+4 | >>> COPY --from=z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build /app/dist .
+2026-Jan-24 12:39:12.608084
+5 |     COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+2026-Jan-24 12:39:12.608084
+--------------------
+2026-Jan-24 12:39:12.608084
+ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref bf82688d-71de-4f65-aa98-fae8295cee86::wcx6jph7s8lgpcc2g73bcfr7h: "/app/dist": not found
+2026-Jan-24 12:39:12.615593
+exit status 1
+2026-Jan-24 12:39:12.682524
+========================================
+2026-Jan-24 12:39:12.693994
+Deployment failed: Command execution failed (exit code 1): docker exec x08gg0os4kcoo40wco488k80 bash -c 'bash /artifacts/build.sh'
+2026-Jan-24 12:39:12.693994
+Error: #0 building with "default" instance using docker driver
+2026-Jan-24 12:39:12.693994
+2026-Jan-24 12:39:12.693994
+#1 [internal] load build definition from Dockerfile
+2026-Jan-24 12:39:12.693994
+#1 transferring dockerfile: 284B done
+2026-Jan-24 12:39:12.693994
+#1 DONE 0.0s
+2026-Jan-24 12:39:12.693994
+2026-Jan-24 12:39:12.693994
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+2026-Jan-24 12:39:12.693994
+#2 DONE 0.0s
+2026-Jan-24 12:39:12.693994
+2026-Jan-24 12:39:12.693994
+#3 [internal] load metadata for docker.io/library/z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build
+2026-Jan-24 12:39:12.693994
+#3 DONE 0.0s
+2026-Jan-24 12:39:12.693994
+2026-Jan-24 12:39:12.693994
+#4 [internal] load .dockerignore
+2026-Jan-24 12:39:12.693994
+#4 transferring context: 2B done
+2026-Jan-24 12:39:12.693994
+#4 DONE 0.0s
+2026-Jan-24 12:39:12.693994
+2026-Jan-24 12:39:12.693994
+#5 [internal] load build context
+2026-Jan-24 12:39:12.693994
+#5 transferring context: 525B done
+2026-Jan-24 12:39:12.693994
+#5 DONE 0.0s
+2026-Jan-24 12:39:12.693994
+2026-Jan-24 12:39:12.693994
+#6 [stage-0 1/4] FROM docker.io/library/nginx:alpine
+2026-Jan-24 12:39:12.693994
+#6 DONE 0.1s
+2026-Jan-24 12:39:12.693994
+2026-Jan-24 12:39:12.693994
+#7 [stage-0 2/4] WORKDIR /usr/share/nginx/html/
+2026-Jan-24 12:39:12.693994
+#7 DONE 0.0s
+2026-Jan-24 12:39:12.693994
+2026-Jan-24 12:39:12.693994
+#8 FROM docker.io/library/z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build
+2026-Jan-24 12:39:12.693994
+#8 DONE 0.1s
+2026-Jan-24 12:39:12.693994
+2026-Jan-24 12:39:12.693994
+#9 [stage-0 3/4] COPY --from=z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build /app/dist .
+2026-Jan-24 12:39:12.693994
+#9 ERROR: failed to calculate checksum of ref bf82688d-71de-4f65-aa98-fae8295cee86::wcx6jph7s8lgpcc2g73bcfr7h: "/app/dist": not found
+2026-Jan-24 12:39:12.693994
+------
+2026-Jan-24 12:39:12.693994
+> [stage-0 3/4] COPY --from=z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build /app/dist .:
+2026-Jan-24 12:39:12.693994
+------
+2026-Jan-24 12:39:12.693994
+Dockerfile:4
+2026-Jan-24 12:39:12.693994
+--------------------
+2026-Jan-24 12:39:12.693994
+2 |     WORKDIR /usr/share/nginx/html/
+2026-Jan-24 12:39:12.693994
+3 |     LABEL coolify.deploymentId=x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:39:12.693994
+4 | >>> COPY --from=z8o04c8c844o4cs4sooswg00:f4101e2479ae997715b8259b8ba686e5cb94e1ad-build /app/dist .
+2026-Jan-24 12:39:12.693994
+5 |     COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+2026-Jan-24 12:39:12.693994
+--------------------
+2026-Jan-24 12:39:12.693994
+ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref bf82688d-71de-4f65-aa98-fae8295cee86::wcx6jph7s8lgpcc2g73bcfr7h: "/app/dist": not found
+2026-Jan-24 12:39:12.693994
+exit status 1
+2026-Jan-24 12:39:12.704505
+Error type: RuntimeException
+2026-Jan-24 12:39:12.715966
+Error code: 0
+2026-Jan-24 12:39:12.727261
+Location: /var/www/html/app/Traits/ExecuteRemoteCommand.php:243
+2026-Jan-24 12:39:12.738434
+Stack trace (first 5 lines):
+2026-Jan-24 12:39:12.748475
+#0 /var/www/html/app/Traits/ExecuteRemoteCommand.php(104): App\Jobs\ApplicationDeploymentJob->executeCommandWithProcess()
+2026-Jan-24 12:39:12.758907
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(271): App\Jobs\ApplicationDeploymentJob->{closure:App\Traits\ExecuteRemoteCommand::execute_remote_command():71}()
+2026-Jan-24 12:39:12.769290
+#2 /var/www/html/app/Traits/ExecuteRemoteCommand.php(71): Illuminate\Support\Collection->each()
+2026-Jan-24 12:39:12.780930
+#3 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(3015): App\Jobs\ApplicationDeploymentJob->execute_remote_command()
+2026-Jan-24 12:39:12.794480
+#4 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(888): App\Jobs\ApplicationDeploymentJob->build_image()
+2026-Jan-24 12:39:12.805167
+========================================
+2026-Jan-24 12:39:12.815971
+Deployment failed. Removing the new version of your application.
+2026-Jan-24 12:39:13.375386
+Gracefully shutting down build container: x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:39:13.697364
+[CMD]: docker stop -t 30 x08gg0os4kcoo40wco488k80
+2026-Jan-24 12:39:13.697364
+x08gg0os4kcoo40wco488k80
