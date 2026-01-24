@@ -279,9 +279,9 @@
             color: #f8d7da;
         }
 
-        .price {
+        .rrp-price {
             font-weight: 700;
-            color: var(--accent-color);
+            color: #0d6efd;
         }
 
         .loading {
@@ -368,6 +368,36 @@
             transform: translateX(26px);
         }
 
+        .stats-section {
+            margin-bottom: 20px;
+        }
+
+        .stats-toggle {
+            width: 100%;
+            padding: 15px 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            color: var(--text-primary);
+        }
+
+        .stats-toggle:hover {
+            background: var(--bg-secondary);
+        }
+
+        .stats-grid.hidden {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -387,6 +417,39 @@
 
             .stat-value {
                 font-size: 22px;
+            }
+
+            /* Mobile card view for table */
+            table thead {
+                display: none;
+            }
+
+            table, tbody {
+                display: block;
+            }
+
+            tbody tr {
+                display: block;
+                margin-bottom: 15px;
+                background: var(--bg-card);
+                border-radius: 8px;
+                padding: 15px;
+                box-shadow: var(--shadow);
+                border: 1px solid var(--border-color);
+            }
+
+            tbody td {
+                display: grid;
+                grid-template-columns: 120px 1fr;
+                padding: 8px 0;
+                border: none;
+                text-align: left;
+            }
+
+            tbody td:before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--text-secondary);
             }
         }
 
@@ -466,18 +529,19 @@
             <p><strong>Фильтры:</strong> Используйте поиск, фильтры по бренду и наличию для быстрого поиска товаров</p>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Всего товаров</div>
-                <div class="stat-value" id="totalProducts">0</div>
-            </div>
-            <div class="stat-card success">
-                <div class="stat-label">В наличии</div>
-                <div class="stat-value" id="inStockProducts">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Последнее обновление</div>
-                <div class="stat-value" style="font-size: 16px;" id="lastUpdate">—</div>
+        <div class="stats-section">
+            <button class="stats-toggle" onclick="toggleStats()">
+                📊 Показать статистику <span id="statsArrow">▼</span>
+            </button>
+            <div class="stats-grid hidden" id="statsGrid" style="display: none;">
+                <div class="stat-card">
+                    <div class="stat-label">Всего товаров</div>
+                    <div class="stat-value" id="totalProducts">0</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-label">В наличии</div>
+                    <div class="stat-value" id="inStockProducts">0</div>
+                </div>
             </div>
         </div>
 
@@ -514,11 +578,11 @@
                     <tr>
                         <th class="sortable" data-column="brand">Бренд</th>
                         <th class="sortable" data-column="name">Наименование</th>
+                        <th class="sortable" data-column="stock">Остаток склад</th>
                         <th class="sortable" data-column="description">Категория</th>
                         <th class="sortable" data-column="volume">Объем, мл</th>
-                        <th class="sortable" data-column="rrp">РРЦ</th>
+                        <th class="sortable" data-column="rrp">Цена продажи</th>
                         <th class="sortable" data-column="price">Стоимость, ₽</th>
-                        <th class="sortable" data-column="stock">Остаток склад</th>
                         <th>Статус</th>
                     </tr>
                 </thead>
@@ -835,14 +899,14 @@
 
             tbody.innerHTML = filteredProducts.map(product => `
                 <tr>
-                    <td><strong>${escapeHtml(product.brand)}</strong></td>
-                    <td>${escapeHtml(product.name)}</td>
-                    <td><em>${escapeHtml(product.description || '—')}</em></td>
-                    <td>${product.volume || '—'}</td>
-                    <td>${product.rrp ? product.rrp.toLocaleString('ru-RU') + ' ₽' : '—'}</td>
-                    <td class="price">${product.price ? product.price.toLocaleString('ru-RU') + ' ₽' : '—'}</td>
-                    <td><strong>${product.stock}</strong></td>
-                    <td>
+                    <td data-label="Бренд"><strong>${escapeHtml(product.brand)}</strong></td>
+                    <td data-label="Наименование">${escapeHtml(product.name)}</td>
+                    <td data-label="Остаток"><strong>${product.stock}</strong></td>
+                    <td data-label="Категория"><em>${escapeHtml(product.description || '—')}</em></td>
+                    <td data-label="Объем">${product.volume || '—'}</td>
+                    <td data-label="Цена продажи" class="rrp-price">${product.rrp ? product.rrp.toLocaleString('ru-RU') + ' ₽' : '—'}</td>
+                    <td data-label="Стоимость">${product.price ? product.price.toLocaleString('ru-RU') + ' ₽' : '—'}</td>
+                    <td data-label="Статус">
                         <span class="stock-badge ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
                             ${product.stock > 0 ? '✓ В наличии' : '✗ Нет в наличии'}
                         </span>
@@ -857,7 +921,6 @@
 
             document.getElementById('totalProducts').textContent = totalProducts.toLocaleString('ru-RU');
             document.getElementById('inStockProducts').textContent = inStockProducts.toLocaleString('ru-RU');
-            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ru-RU');
         }
 
         function updateFileInfo(filename, timestamp) {
@@ -917,15 +980,15 @@
                 return;
             }
 
-            const headers = ['Бренд', 'Наименование', 'Категория', 'Объем мл', 'РРЦ', 'Стоимость руб', 'Остаток склад'];
+            const headers = ['Бренд', 'Наименование', 'Остаток склад', 'Категория', 'Объем мл', 'Цена продажи', 'Стоимость руб'];
             const rows = filteredProducts.map(p => [
                 p.brand,
                 p.name,
+                p.stock,
                 p.description || '',
                 p.volume,
                 p.rrp,
-                p.price,
-                p.stock
+                p.price
             ]);
 
             const csvContent = [
@@ -973,9 +1036,30 @@
             localStorage.setItem('infoBannerClosed', 'true');
         }
 
+        // Toggle stats visibility
+        function toggleStats() {
+            const statsGrid = document.getElementById('statsGrid');
+            const arrow = document.getElementById('statsArrow');
+            const isHidden = statsGrid.style.display === 'none';
+            
+            statsGrid.style.display = isHidden ? 'grid' : 'none';
+            statsGrid.classList.toggle('hidden');
+            arrow.textContent = isHidden ? '▲' : '▼';
+            
+            // Save state to localStorage
+            localStorage.setItem('statsVisible', isHidden);
+        }
+
         // Check if banner was closed before
         if (localStorage.getItem('infoBannerClosed') === 'true') {
             document.getElementById('infoBanner').classList.remove('show');
+        }
+
+        // Load stats visibility state on page load
+        if (localStorage.getItem('statsVisible') === 'true') {
+            document.getElementById('statsGrid').style.display = 'grid';
+            document.getElementById('statsGrid').classList.remove('hidden');
+            document.getElementById('statsArrow').textContent = '▲';
         }
 
         // Event listeners for filters
