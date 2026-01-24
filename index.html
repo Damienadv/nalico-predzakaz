@@ -3,1099 +3,725 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Склад "Эльвира-Кореянка"</title>
+    <title>NALICO - Предзаказ товаров</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Vue 3 via CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <!-- XLSX library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'nalico-pink': '#F9BFC5',
+                        'nalico-pink-hover': '#f3aab3',
+                        'nalico-milk': '#FFF5F5',
+                        'nalico-brown': '#887D6D',
+                        'nalico-dark-bg': '#1A1A1A',
+                        'nalico-dark-card': '#252525',
+                    },
+                    fontFamily: {
+                        'heading': ['Montserrat', 'sans-serif'],
+                        'body': ['Inter', 'Segoe UI', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 16px rgba(0, 0, 0, 0.06)',
+                        'pink': '0 8px 24px rgba(249, 191, 197, 0.12)',
+                    },
+                    borderRadius: {
+                        'card': '1rem',
+                        'button': '0.75rem',
+                    },
+                }
+            }
+        }
+    </script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        [v-cloak] {
+            display: none;
         }
-
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-card: #ffffff;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --border-color: #dee2e6;
-            --accent-color: #0d6efd;
-            --accent-hover: #0b5ed7;
-            --success-color: #198754;
-            --danger-color: #dc3545;
-            --shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1a1a1a;
-            --bg-secondary: #2d2d2d;
-            --bg-card: #252525;
-            --text-primary: #ffffff;
-            --text-secondary: #adb5bd;
-            --border-color: #404040;
-            --shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        header {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
 
-        h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .theme-toggle {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 20px;
-            transition: all 0.3s;
-        }
-
-        .theme-toggle:hover {
-            background: var(--accent-color);
-            border-color: var(--accent-color);
-            color: white;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--accent-color);
-        }
-
-        .stat-card.success {
-            border-left-color: var(--success-color);
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .filters {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-        }
-
-        .filters-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        input, select, button {
-            padding: 10px 15px;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            transition: all 0.3s;
-        }
-
-        select[multiple] {
-            min-height: 120px;
-            padding: 5px;
-        }
-
-        select[multiple] option {
-            padding: 8px 12px;
+        ::-webkit-scrollbar-thumb {
+            background: #F9BFC5;
             border-radius: 4px;
-            margin: 2px 0;
-            cursor: pointer;
         }
 
-        select[multiple] option:hover {
-            background: var(--accent-color);
-            color: white;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f3aab3;
         }
 
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #F9BFC5 0%, #f3aab3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Multiple select styling */
         select[multiple] option:checked {
-            background: var(--accent-color);
+            background: linear-gradient(135deg, #F9BFC5 0%, #f3aab3 100%);
             color: white;
-            font-weight: 600;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            cursor: pointer;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        button:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button.secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 2px solid var(--border-color);
-        }
-
-        button.secondary:hover {
-            background: var(--border-color);
-        }
-
-        .table-container {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-        }
-
-        th {
-            background: var(--bg-secondary);
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 2px solid var(--border-color);
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-        }
-
-        th:hover {
-            background: var(--border-color);
-        }
-
-        th.sortable::after {
-            content: ' ⇅';
-            opacity: 0.3;
-        }
-
-        th.sorted-asc::after {
-            content: ' ↑';
-            opacity: 1;
-        }
-
-        th.sorted-desc::after {
-            content: ' ↓';
-            opacity: 1;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        tr:hover {
-            background: var(--bg-secondary);
-        }
-
-        .stock-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .stock-badge.in-stock {
-            background: #d1e7dd;
-            color: #0a3622;
-        }
-
-        .stock-badge.out-of-stock {
-            background: #f8d7da;
-            color: #58151c;
-        }
-
-        [data-theme="dark"] .stock-badge.in-stock {
-            background: #0a3622;
-            color: #d1e7dd;
-        }
-
-        [data-theme="dark"] .stock-badge.out-of-stock {
-            background: #58151c;
-            color: #f8d7da;
-        }
-
-        .rrp-price {
-            font-weight: 700;
-            color: #0d6efd;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 18px;
-            color: var(--text-secondary);
-        }
-
-        .error {
-            background: #f8d7da;
-            color: #58151c;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--danger-color);
-        }
-
-        [data-theme="dark"] .error {
-            background: #58151c;
-            color: #f8d7da;
-        }
-
-        .file-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-            padding: 10px;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .auto-refresh {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--border-color);
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--accent-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        .stats-section {
-            margin-bottom: 20px;
-        }
-
-        .stats-toggle {
-            width: 100%;
-            padding: 15px 20px;
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            text-align: left;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s;
-            color: var(--text-primary);
-        }
-
-        .stats-toggle:hover {
-            background: var(--bg-secondary);
-        }
-
-        .stats-grid.hidden {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 22px;
-            }
-
-            .filters-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .table-container {
-                padding: 10px;
-            }
-
-            .stat-value {
-                font-size: 22px;
-            }
-
-            /* Mobile card view for table */
-            table thead {
-                display: none;
-            }
-
-            table, tbody {
-                display: block;
-            }
-
-            tbody tr {
-                display: block;
-                margin-bottom: 15px;
-                background: var(--bg-card);
-                border-radius: 8px;
-                padding: 15px;
-                box-shadow: var(--shadow);
-                border: 1px solid var(--border-color);
-            }
-
-            tbody td {
-                display: grid;
-                grid-template-columns: 120px 1fr;
-                padding: 8px 0;
-                border: none;
-                text-align: left;
-            }
-
-            tbody td:before {
-                content: attr(data-label);
-                font-weight: 600;
-                color: var(--text-secondary);
-            }
-        }
-
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-secondary);
-            font-size: 16px;
-        }
-
-        .info-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-            display: none;
-        }
-
-        .info-banner.show {
-            display: block;
-        }
-
-        .info-banner h3 {
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .info-banner p {
-            margin: 5px 0;
-            opacity: 0.95;
-        }
-
-        .info-banner .close-btn {
-            float: right;
-            cursor: pointer;
-            font-size: 24px;
-            line-height: 1;
-            opacity: 0.8;
-            transition: opacity 0.3s;
-        }
-
-        .info-banner .close-btn:hover {
-            opacity: 1;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <div>
-                <h1>📦 Склад "Эльвира-Кореянка"</h1>
-                <div class="file-info">
-                    <span id="fileInfo">Загрузка последнего прайс-листа...</span>
+<body class="bg-white dark:bg-nalico-dark-bg transition-colors duration-300">
+    <div id="app" v-cloak>
+        <!-- Header -->
+        <header class="bg-white dark:bg-nalico-dark-card border-b border-gray-200/20 dark:border-gray-800 shadow-soft sticky top-0 z-50 backdrop-blur-sm bg-white/90 dark:bg-nalico-dark-card/90">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+                <div class="flex items-center justify-between flex-wrap gap-4">
+                    <div class="flex items-center gap-4">
+                        <h1 class="text-3xl sm:text-4xl font-heading font-bold tracking-wide gradient-text">
+                            NALICO
+                        </h1>
+                        <span class="text-sm text-nalico-brown dark:text-gray-400 font-light hidden sm:inline">
+                            Предзаказ товаров
+                        </span>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <!-- Auto-refresh toggle -->
+                        <div class="flex items-center gap-2 px-3 py-2 bg-nalico-milk dark:bg-nalico-dark-bg rounded-xl">
+                            <span class="text-xs text-nalico-brown dark:text-gray-400 hidden sm:inline">Авто-обновление</span>
+                            <button 
+                                @click="toggleAutoRefresh"
+                                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200"
+                                :class="autoRefreshEnabled ? 'bg-nalico-pink' : 'bg-gray-300 dark:bg-gray-700'"
+                            >
+                                <span 
+                                    class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200"
+                                    :class="autoRefreshEnabled ? 'translate-x-6' : 'translate-x-1'"
+                                ></span>
+                            </button>
+                        </div>
+                        
+                        <!-- Theme toggle -->
+                        <button 
+                            @click="toggleTheme"
+                            class="p-2.5 rounded-xl bg-nalico-milk dark:bg-nalico-dark-bg hover:bg-nalico-pink/10 transition-all duration-200 hover:scale-105"
+                        >
+                            <svg v-if="!isDark" class="w-5 h-5 text-nalico-brown" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                            <svg v-else class="w-5 h-5 text-nalico-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="header-controls">
-                <div class="auto-refresh">
-                    <label for="autoRefresh">Авто-обновление</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="autoRefresh">
-                        <span class="slider"></span>
-                    </label>
+                
+                <!-- File info -->
+                <div v-if="fileInfo" class="mt-3 text-xs text-nalico-brown dark:text-gray-400">
+                    📄 {{ fileInfo }}
                 </div>
-                <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌙</button>
             </div>
         </header>
 
-        <div id="errorContainer"></div>
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+            <!-- Error Message -->
+            <div v-if="errorMessage" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-card p-4 text-red-800 dark:text-red-300">
+                {{ errorMessage }}
+            </div>
 
-        <div class="info-banner show" id="infoBanner">
-            <span class="close-btn" onclick="closeInfoBanner()">×</span>
-            <h3>👋 Добро пожаловать в Склад "Эльвира-Кореянка"!</h3>
-            <p><strong>Автоматическая загрузка:</strong> Последний прайс-лист загружается автоматически</p>
-            <p><strong>Ручная загрузка:</strong> Нажмите кнопку "📁 Загрузить файл" для выбора другого файла</p>
-            <p><strong>Фильтры:</strong> Используйте поиск, фильтры по бренду и наличию для быстрого поиска товаров</p>
-        </div>
-
-        <div class="stats-section">
-            <button class="stats-toggle" onclick="toggleStats()">
-                📊 Показать статистику <span id="statsArrow">▼</span>
-            </button>
-            <div class="stats-grid hidden" id="statsGrid" style="display: none;">
-                <div class="stat-card">
-                    <div class="stat-label">Всего товаров</div>
-                    <div class="stat-value" id="totalProducts">0</div>
+            <!-- Stats Section -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-white dark:bg-nalico-dark-card rounded-card shadow-soft p-6 border-t-4 border-nalico-pink hover:shadow-pink transition-all duration-300 transform hover:-translate-y-0.5">
+                    <p class="text-sm text-nalico-brown dark:text-gray-400 font-light mb-2">
+                        Всего товаров
+                    </p>
+                    <p class="text-3xl sm:text-4xl font-heading font-bold text-gray-900 dark:text-white">
+                        {{ formatNumber(filteredProducts.length) }}
+                    </p>
                 </div>
-                <div class="stat-card success">
-                    <div class="stat-label">В наличии</div>
-                    <div class="stat-value" id="inStockProducts">0</div>
+                <div class="bg-white dark:bg-nalico-dark-card rounded-card shadow-soft p-6 border-t-4 border-green-500 hover:shadow-pink transition-all duration-300 transform hover:-translate-y-0.5">
+                    <p class="text-sm text-nalico-brown dark:text-gray-400 font-light mb-2">
+                        В наличии
+                    </p>
+                    <p class="text-3xl sm:text-4xl font-heading font-bold text-gray-900 dark:text-white">
+                        {{ formatNumber(inStockCount) }}
+                    </p>
                 </div>
             </div>
-        </div>
 
-        <div class="filters">
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label for="searchInput">🔍 Поиск по названию</label>
-                    <input type="text" id="searchInput" placeholder="Введите название товара...">
+            <!-- Filters Panel -->
+            <div class="bg-white dark:bg-nalico-dark-card rounded-card shadow-soft p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- Search -->
+                    <div>
+                        <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2">
+                            🔍 Поиск
+                        </label>
+                        <input 
+                            v-model="searchQuery"
+                            type="text"
+                            placeholder="Введите название товара..."
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-nalico-milk dark:bg-nalico-dark-bg text-gray-900 dark:text-white placeholder-gray-500 focus:border-nalico-pink focus:ring-4 focus:ring-nalico-pink/15 transition-all outline-none"
+                        />
+                    </div>
+                    
+                    <!-- Brand Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2">
+                            🏷️ Бренд (можно выбрать несколько)
+                        </label>
+                        <select 
+                            v-model="selectedBrands"
+                            multiple
+                            size="5"
+                            class="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-nalico-milk dark:bg-nalico-dark-bg text-gray-900 dark:text-white focus:border-nalico-pink focus:ring-4 focus:ring-nalico-pink/15 transition-all outline-none"
+                        >
+                            <option v-for="brand in availableBrands" :key="brand" :value="brand" class="py-1.5">
+                                {{ brand }}
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <!-- Stock Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-nalico-brown dark:text-gray-400 mb-2">
+                            📦 Наличие
+                        </label>
+                        <select
+                            v-model="stockFilter"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-nalico-milk dark:bg-nalico-dark-bg text-gray-900 dark:text-white focus:border-nalico-pink focus:ring-4 focus:ring-nalico-pink/15 transition-all outline-none"
+                        >
+                            <option value="instock">Только в наличии</option>
+                            <option value="all">Все товары</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <label for="brandFilter">🏷️ Бренд (можно выбрать несколько)</label>
-                    <select id="brandFilter" multiple size="5">
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="stockFilter">📦 Наличие</label>
-                    <select id="stockFilter">
-                        <option value="instock">Только в наличии</option>
-                        <option value="all">Все товары</option>
-                    </select>
+                
+                <!-- Action Buttons -->
+                <div class="flex gap-3 flex-wrap">
+                    <button 
+                        @click="loadExcelFile"
+                        class="px-6 py-3 bg-nalico-pink hover:bg-nalico-pink-hover text-white font-medium rounded-button transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-pink"
+                    >
+                        📁 Загрузить Excel
+                    </button>
+                    <button 
+                        @click="exportToCSV"
+                        class="px-6 py-3 bg-nalico-pink hover:bg-nalico-pink-hover text-white font-medium rounded-button transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-pink"
+                    >
+                        📥 Экспорт в CSV
+                    </button>
+                    <button 
+                        @click="resetFilters"
+                        class="px-6 py-3 border-2 border-nalico-pink text-nalico-pink hover:bg-nalico-milk dark:hover:bg-nalico-dark-bg font-medium rounded-button transition-all duration-200"
+                    >
+                        🔄 Сбросить фильтры
+                    </button>
                 </div>
             </div>
-            <div class="button-group">
-                <button onclick="loadExcelFile()">📁 Загрузить файл</button>
-                <button onclick="exportToCSV()">📥 Экспорт в CSV</button>
-                <button class="secondary" onclick="resetFilters()">🔄 Сбросить фильтры</button>
-            </div>
-        </div>
 
-        <div class="table-container">
-            <table id="productsTable">
-                <thead>
-                    <tr>
-                        <th class="sortable" data-column="brand">Бренд</th>
-                        <th class="sortable" data-column="name">Наименование</th>
-                        <th class="sortable" data-column="stock">Остаток склад</th>
-                        <th class="sortable" data-column="description">Категория</th>
-                        <th class="sortable" data-column="volume">Объем, мл</th>
-                        <th class="sortable" data-column="rrp">Цена продажи</th>
-                        <th class="sortable" data-column="price">Стоимость, ₽</th>
-                        <th>Статус</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr>
-                        <td colspan="8" class="loading">
-                            ⏳ Загружается последний прайс-лист из директории price_files/...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Products Table -->
+            <div class="bg-white dark:bg-nalico-dark-card rounded-card shadow-soft overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-nalico-milk dark:bg-nalico-dark-bg">
+                            <tr>
+                                <th 
+                                    v-for="col in columns" 
+                                    :key="col.key"
+                                    @click="sortBy(col.key)"
+                                    class="px-4 sm:px-6 py-4 text-left text-xs sm:text-sm font-semibold text-nalico-brown dark:text-gray-400 cursor-pointer hover:bg-nalico-pink/10 transition-colors select-none"
+                                    :class="col.class"
+                                >
+                                    <span class="flex items-center gap-2">
+                                        {{ col.label }}
+                                        <span v-if="sortColumn === col.key" class="text-nalico-pink">
+                                            {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="loading" class="border-t border-gray-100 dark:border-gray-800">
+                                <td colspan="8" class="px-6 py-12 text-center text-nalico-brown dark:text-gray-400">
+                                    <div class="flex items-center justify-center gap-3">
+                                        <div class="w-8 h-8 border-4 border-nalico-pink border-t-transparent rounded-full animate-spin"></div>
+                                        <span>Загрузка данных...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-else-if="filteredProducts.length === 0" class="border-t border-gray-100 dark:border-gray-800">
+                                <td colspan="8" class="px-6 py-12 text-center text-nalico-brown dark:text-gray-400">
+                                    Нет товаров для отображения
+                                </td>
+                            </tr>
+                            <tr 
+                                v-else
+                                v-for="product in paginatedProducts" 
+                                :key="product.article"
+                                class="border-t border-gray-100 dark:border-gray-800 hover:bg-nalico-milk dark:hover:bg-nalico-dark-bg/50 transition-colors"
+                            >
+                                <td class="px-4 sm:px-6 py-4 font-semibold text-gray-900 dark:text-white text-sm">{{ product.brand }}</td>
+                                <td class="px-4 sm:px-6 py-4 text-gray-900 dark:text-white text-sm">{{ product.name }}</td>
+                                <td class="px-4 sm:px-6 py-4 font-bold text-gray-900 dark:text-white">{{ product.stock }}</td>
+                                <td class="px-4 sm:px-6 py-4 text-sm text-gray-600 dark:text-gray-400 hidden lg:table-cell">{{ product.description || '—' }}</td>
+                                <td class="px-4 sm:px-6 py-4 text-gray-900 dark:text-white hidden md:table-cell">{{ product.volume || '—' }}</td>
+                                <td class="px-4 sm:px-6 py-4 font-bold text-nalico-pink">{{ formatPrice(product.rrp) }}</td>
+                                <td class="px-4 sm:px-6 py-4 text-gray-900 dark:text-white">{{ formatPrice(product.price) }}</td>
+                                <td class="px-4 sm:px-6 py-4">
+                                    <span 
+                                        class="inline-flex px-3 py-1 rounded-full text-xs font-medium transition-colors"
+                                        :class="product.stock > 0 
+                                            ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
+                                            : 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400'"
+                                    >
+                                        {{ product.stock > 0 ? '✓ В наличии' : '✗ Нет в наличии' }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div v-if="totalPages > 1" class="px-6 py-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                    <div class="text-sm text-nalico-brown dark:text-gray-400">
+                        Показано {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} из {{ filteredProducts.length }}
+                    </div>
+                    <div class="flex gap-2">
+                        <button 
+                            @click="currentPage--"
+                            :disabled="currentPage === 1"
+                            class="px-4 py-2 rounded-lg bg-nalico-milk dark:bg-nalico-dark-bg text-nalico-brown dark:text-gray-400 hover:bg-nalico-pink hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Назад
+                        </button>
+                        <button 
+                            @click="currentPage++"
+                            :disabled="currentPage === totalPages"
+                            class="px-4 py-2 rounded-lg bg-nalico-milk dark:bg-nalico-dark-bg text-nalico-brown dark:text-gray-400 hover:bg-nalico-pink hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Вперёд
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="max-w-7xl mx-auto px-4 sm:px-6 py-6 text-center text-sm text-nalico-brown dark:text-gray-400">
+            © 2024 NALICO. Все права защищены.
+        </footer>
     </div>
 
     <script>
-        let allProducts = [];
-        let filteredProducts = [];
-        let sortColumn = null;
-        let sortDirection = 'asc';
-        let autoRefreshInterval = null;
+        const { createApp } = Vue;
 
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-        });
-
-        // Auto-refresh toggle
-        document.getElementById('autoRefresh').addEventListener('change', (e) => {
-            if (e.target.checked) {
-                autoRefreshInterval = setInterval(() => {
-                    loadDataFromJSON();
-                }, 30000);
-            } else {
-                if (autoRefreshInterval) {
-                    clearInterval(autoRefreshInterval);
-                    autoRefreshInterval = null;
-                }
-            }
-        });
-
-        // Автоматическая загрузка данных из JSON
-        async function loadDataFromJSON() {
-            try {
-                showError('');
-                console.log('Загрузка данных из data.json...');
-                
-                const response = await fetch('./data.json');
-                if (!response.ok) {
-                    throw new Error('Не удалось загрузить data.json');
-                }
-                
-                const data = await response.json();
-                console.log('Данные загружены:', data.metadata);
-                
-                // Загружаем товары
-                allProducts = data.products;
-                
-                // Обновляем информацию о файле
-                updateFileInfo(data.metadata.filename, new Date(data.metadata.updated).getTime());
-                
-                // Скрываем информационный баннер
-                closeInfoBanner();
-                
-                // Заполняем фильтр брендов
-                populateBrandFilter();
-                
-                // Применяем фильтры
-                applyFilters();
-                
-                console.log(`✅ Загружено ${allProducts.length} товаров`);
-                
-            } catch (error) {
-                console.error('Ошибка загрузки данных:', error);
-                showError('Не удалось загрузить данные. Убедитесь, что файл data.json существует. Запустите скрипт: node convert-to-json.js', 'error');
-                
-                // Предлагаем загрузить Excel файл вручную
-                document.getElementById('fileInfo').textContent = 'Ошибка загрузки данных. Используйте кнопку "Загрузить файл"';
-            }
-        }
-
-        // Ручная загрузка Excel файла (через диалог выбора) - для обратной совместимости
-        function loadExcelFile() {
-            showError('');
-            
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.xlsx,.xls';
-            
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    await processExcelFile(file);
-                }
-            };
-            
-            // Показываем диалог выбора файла
-            input.click();
-        }
-
-        async function processExcelFile(file) {
-            const reader = new FileReader();
-            
-            reader.onload = async (e) => {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
+        createApp({
+            data() {
+                return {
+                    // Data
+                    allProducts: [],
+                    loading: false,
+                    errorMessage: '',
+                    fileInfo: '',
                     
-                    // Берем первый лист
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    // Filters
+                    searchQuery: '',
+                    selectedBrands: [],
+                    stockFilter: 'instock',
                     
-                    // Парсим данные
-                    parseProducts(jsonData, file.name);
+                    // Sorting
+                    sortColumn: null,
+                    sortDirection: 'asc',
                     
-                    updateFileInfo(file.name, file.lastModified || Date.now());
-                } catch (error) {
-                    showError('Ошибка при обработке файла: ' + error.message);
-                    console.error(error);
+                    // Pagination
+                    currentPage: 1,
+                    itemsPerPage: 50,
+                    
+                    // UI State
+                    isDark: false,
+                    autoRefreshEnabled: false,
+                    autoRefreshInterval: null,
+                    
+                    // Table columns
+                    columns: [
+                        { key: 'brand', label: 'Бренд', class: '' },
+                        { key: 'name', label: 'Наименование', class: '' },
+                        { key: 'stock', label: 'Остаток', class: '' },
+                        { key: 'description', label: 'Категория', class: 'hidden lg:table-cell' },
+                        { key: 'volume', label: 'Объем, мл', class: 'hidden md:table-cell' },
+                        { key: 'rrp', label: 'Цена продажи', class: '' },
+                        { key: 'price', label: 'Стоимость, ₽', class: '' },
+                        { key: 'status', label: 'Статус', class: '' },
+                    ]
                 }
-            };
-            
-            reader.onerror = () => {
-                showError('Ошибка при чтении файла');
-            };
-            
-            reader.readAsArrayBuffer(file);
-        }
-
-        function parseProducts(data, filename) {
-            if (data.length < 2) {
-                showError('Файл не содержит данных');
-                return;
-            }
-
-            // Ищем заголовки - они могут быть не в первой строке
-            let headerRowIndex = -1;
-            let headers = [];
-            
-            for (let i = 0; i < Math.min(5, data.length); i++) {
-                const row = data[i];
-                const hasHeaders = row.some(cell => {
-                    const cellStr = String(cell || '').toLowerCase().trim();
-                    return cellStr.includes('бренд') || 
-                           cellStr.includes('наименование') || 
-                           cellStr.includes('остаток');
-                });
+            },
+            computed: {
+                availableBrands() {
+                    return [...new Set(this.allProducts.map(p => p.brand))].sort();
+                },
+                filteredProducts() {
+                    let products = this.allProducts;
+                    
+                    // Search filter
+                    if (this.searchQuery) {
+                        const query = this.searchQuery.toLowerCase();
+                        products = products.filter(p => 
+                            p.name.toLowerCase().includes(query) ||
+                            p.brand.toLowerCase().includes(query) ||
+                            (p.description && p.description.toLowerCase().includes(query)) ||
+                            (p.article && p.article.toLowerCase().includes(query))
+                        );
+                    }
+                    
+                    // Brand filter
+                    if (this.selectedBrands.length > 0) {
+                        products = products.filter(p => this.selectedBrands.includes(p.brand));
+                    }
+                    
+                    // Stock filter
+                    if (this.stockFilter === 'instock') {
+                        products = products.filter(p => p.stock > 0);
+                    }
+                    
+                    // Sorting
+                    if (this.sortColumn) {
+                        products = [...products].sort((a, b) => {
+                            let aVal = a[this.sortColumn];
+                            let bVal = b[this.sortColumn];
+                            
+                            if (typeof aVal === 'string') {
+                                aVal = aVal.toLowerCase();
+                                bVal = bVal.toLowerCase();
+                            }
+                            
+                            if (aVal < bVal) return this.sortDirection === 'asc' ? -1 : 1;
+                            if (aVal > bVal) return this.sortDirection === 'asc' ? 1 : -1;
+                            return 0;
+                        });
+                    }
+                    
+                    return products;
+                },
+                paginatedProducts() {
+                    const start = (this.currentPage - 1) * this.itemsPerPage;
+                    const end = start + this.itemsPerPage;
+                    return this.filteredProducts.slice(start, end);
+                },
+                totalPages() {
+                    return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+                },
+                inStockCount() {
+                    return this.filteredProducts.filter(p => p.stock > 0).length;
+                }
+            },
+            watch: {
+                filteredProducts() {
+                    this.currentPage = 1;
+                }
+            },
+            methods: {
+                // Load data from JSON
+                async loadDataFromJSON() {
+                    try {
+                        this.loading = true;
+                        this.errorMessage = '';
+                        
+                        const response = await fetch('./data.json');
+                        if (!response.ok) {
+                            throw new Error('Не удалось загрузить data.json');
+                        }
+                        
+                        const data = await response.json();
+                        this.allProducts = data.products;
+                        
+                        if (data.metadata) {
+                            const date = new Date(data.metadata.updated);
+                            this.fileInfo = `${data.metadata.filename} (обновлён: ${date.toLocaleDateString('ru-RU')} ${date.toLocaleTimeString('ru-RU')})`;
+                        }
+                        
+                        this.loading = false;
+                    } catch (error) {
+                        console.error('Ошибка загрузки данных:', error);
+                        this.errorMessage = 'Не удалось загрузить данные. Убедитесь, что файл data.json существует.';
+                        this.loading = false;
+                    }
+                },
                 
-                if (hasHeaders) {
-                    headerRowIndex = i;
-                    headers = row;
-                    console.log(`Найдены заголовки в строке ${i}:`, headers);
-                    break;
-                }
-            }
-            
-            if (headerRowIndex === -1) {
-                showError('Не удалось найти заголовки в файле');
-                return;
-            }
-            
-            // Маппинг колонок
-            const columnMap = {
-                brand: -1,
-                name: -1,
-                description: -1,
-                article: -1,
-                volume: -1,
-                rrp: -1,
-                price: -1,
-                order: -1,
-                total: -1,
-                stock: -1
-            };
-
-            // Ищем индексы нужных колонок
-            headers.forEach((header, index) => {
-                const h = String(header || '').toLowerCase().trim();
-                if (h.includes('бренд')) columnMap.brand = index;
-                else if (h.includes('наименование')) columnMap.name = index;
-                else if (h.includes('артикул')) columnMap.article = index;
-                else if (h.includes('объем')) columnMap.volume = index;
-                else if (h.includes('ррц')) columnMap.rrp = index;
-                else if (h.includes('стоимость')) columnMap.price = index;
-                else if (h.includes('заказ')) columnMap.order = index;
-                else if (h.includes('итого')) columnMap.total = index;
-                else if (h.includes('остаток')) columnMap.stock = index;
-            });
-            
-            // Проверяем, что нашли описание (третья колонка после наименования)
-            if (columnMap.name >= 0 && columnMap.name + 1 < headers.length) {
-                const nextCol = String(headers[columnMap.name + 1] || '').trim();
-                if (!nextCol || nextCol === '') {
-                    columnMap.description = columnMap.name + 1;
-                }
-            }
-
-            console.log('Маппинг колонок:', columnMap);
-
-            // Парсим строки
-            allProducts = [];
-            for (let i = headerRowIndex + 1; i < data.length; i++) {
-                const row = data[i];
-                if (!row || row.length === 0) continue;
-
-                // Получаем данные с правильной обработкой типов
-                const brand = columnMap.brand >= 0 ? String(row[columnMap.brand] || '').trim() : '';
-                const name = columnMap.name >= 0 ? String(row[columnMap.name] || '').trim() : '';
-                const description = columnMap.description >= 0 ? String(row[columnMap.description] || '').trim() : '';
-                const article = columnMap.article >= 0 ? String(row[columnMap.article] || '').trim() : '';
+                // Load Excel file
+                loadExcelFile() {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.xlsx,.xls';
+                    
+                    input.onchange = (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            this.processExcelFile(file);
+                        }
+                    };
+                    
+                    input.click();
+                },
                 
-                // Парсим числовые значения безопасно
-                const volume = columnMap.volume >= 0 ? parseFloat(String(row[columnMap.volume] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
-                const rrp = columnMap.rrp >= 0 ? parseFloat(String(row[columnMap.rrp] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
-                const price = columnMap.price >= 0 ? parseFloat(String(row[columnMap.price] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
-                const order = columnMap.order >= 0 ? parseInt(String(row[columnMap.order] || '0').replace(/[^\d-]/g, '')) || 0 : 0;
-                const total = columnMap.total >= 0 ? parseFloat(String(row[columnMap.total] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
-                const stock = columnMap.stock >= 0 ? parseInt(String(row[columnMap.stock] || '0').replace(/[^\d-]/g, '')) || 0 : 0;
-
-                // Пропускаем пустые строки (нет бренда И нет названия)
-                if (!brand && !name) continue;
-
-                const product = {
-                    brand,
-                    name,
-                    description,
-                    article: article || description, // Используем описание если артикул пустой
-                    volume,
-                    rrp,
-                    price,
-                    order,
-                    total,
-                    stock
-                };
-
-                allProducts.push(product);
-            }
-
-            console.log(`Загружено ${allProducts.length} товаров из файла ${filename}`);
-            console.log('Первые 3 товара:', allProducts.slice(0, 3));
-
-            // Скрываем информационный баннер после успешной загрузки
-            closeInfoBanner();
-
-            // Заполняем фильтр брендов
-            populateBrandFilter();
-            
-            // Применяем фильтры
-            applyFilters();
-        }
-
-        function populateBrandFilter() {
-            const brandFilter = document.getElementById('brandFilter');
-            const brands = [...new Set(allProducts.map(p => p.brand))].sort();
-            
-            brandFilter.innerHTML = '';
-            brands.forEach(brand => {
-                if (brand) {
-                    const option = document.createElement('option');
-                    option.value = brand;
-                    option.textContent = brand;
-                    brandFilter.appendChild(option);
+                // Process Excel file
+                processExcelFile(file) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = (e) => {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+                            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                            const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                            
+                            this.parseProducts(jsonData, file.name);
+                            
+                            const date = new Date(file.lastModified || Date.now());
+                            this.fileInfo = `${file.name} (изменён: ${date.toLocaleDateString('ru-RU')} ${date.toLocaleTimeString('ru-RU')})`;
+                        } catch (error) {
+                            this.errorMessage = 'Ошибка при обработке файла: ' + error.message;
+                            console.error(error);
+                        }
+                    };
+                    
+                    reader.onerror = () => {
+                        this.errorMessage = 'Ошибка при чтении файла';
+                    };
+                    
+                    reader.readAsArrayBuffer(file);
+                },
+                
+                // Parse products from Excel data
+                parseProducts(data, filename) {
+                    if (data.length < 2) {
+                        this.errorMessage = 'Файл не содержит данных';
+                        return;
+                    }
+                    
+                    // Find header row
+                    let headerRowIndex = -1;
+                    let headers = [];
+                    
+                    for (let i = 0; i < Math.min(5, data.length); i++) {
+                        const row = data[i];
+                        const hasHeaders = row.some(cell => {
+                            const cellStr = String(cell || '').toLowerCase().trim();
+                            return cellStr.includes('бренд') || 
+                                   cellStr.includes('наименование') || 
+                                   cellStr.includes('остаток');
+                        });
+                        
+                        if (hasHeaders) {
+                            headerRowIndex = i;
+                            headers = row;
+                            break;
+                        }
+                    }
+                    
+                    if (headerRowIndex === -1) {
+                        this.errorMessage = 'Не удалось найти заголовки в файле';
+                        return;
+                    }
+                    
+                    // Map columns
+                    const columnMap = {
+                        brand: -1,
+                        name: -1,
+                        description: -1,
+                        article: -1,
+                        volume: -1,
+                        rrp: -1,
+                        price: -1,
+                        order: -1,
+                        total: -1,
+                        stock: -1
+                    };
+                    
+                    headers.forEach((header, index) => {
+                        const h = String(header || '').toLowerCase().trim();
+                        if (h.includes('бренд')) columnMap.brand = index;
+                        else if (h.includes('наименование')) columnMap.name = index;
+                        else if (h.includes('артикул')) columnMap.article = index;
+                        else if (h.includes('объем')) columnMap.volume = index;
+                        else if (h.includes('ррц')) columnMap.rrp = index;
+                        else if (h.includes('стоимость')) columnMap.price = index;
+                        else if (h.includes('заказ')) columnMap.order = index;
+                        else if (h.includes('итого')) columnMap.total = index;
+                        else if (h.includes('остаток')) columnMap.stock = index;
+                    });
+                    
+                    if (columnMap.name >= 0 && columnMap.name + 1 < headers.length) {
+                        const nextCol = String(headers[columnMap.name + 1] || '').trim();
+                        if (!nextCol || nextCol === '') {
+                            columnMap.description = columnMap.name + 1;
+                        }
+                    }
+                    
+                    // Parse rows
+                    this.allProducts = [];
+                    for (let i = headerRowIndex + 1; i < data.length; i++) {
+                        const row = data[i];
+                        if (!row || row.length === 0) continue;
+                        
+                        const brand = columnMap.brand >= 0 ? String(row[columnMap.brand] || '').trim() : '';
+                        const name = columnMap.name >= 0 ? String(row[columnMap.name] || '').trim() : '';
+                        const description = columnMap.description >= 0 ? String(row[columnMap.description] || '').trim() : '';
+                        const article = columnMap.article >= 0 ? String(row[columnMap.article] || '').trim() : '';
+                        
+                        const volume = columnMap.volume >= 0 ? parseFloat(String(row[columnMap.volume] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
+                        const rrp = columnMap.rrp >= 0 ? parseFloat(String(row[columnMap.rrp] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
+                        const price = columnMap.price >= 0 ? parseFloat(String(row[columnMap.price] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
+                        const order = columnMap.order >= 0 ? parseInt(String(row[columnMap.order] || '0').replace(/[^\d-]/g, '')) || 0 : 0;
+                        const total = columnMap.total >= 0 ? parseFloat(String(row[columnMap.total] || '0').replace(/[^\d.-]/g, '')) || 0 : 0;
+                        const stock = columnMap.stock >= 0 ? parseInt(String(row[columnMap.stock] || '0').replace(/[^\d-]/g, '')) || 0 : 0;
+                        
+                        if (!brand && !name) continue;
+                        
+                        this.allProducts.push({
+                            brand,
+                            name,
+                            description,
+                            article: article || description,
+                            volume,
+                            rrp,
+                            price,
+                            order,
+                            total,
+                            stock
+                        });
+                    }
+                    
+                    this.errorMessage = '';
+                },
+                
+                // Export to CSV
+                exportToCSV() {
+                    if (this.filteredProducts.length === 0) {
+                        alert('Нет данных для экспорта');
+                        return;
+                    }
+                    
+                    const headers = ['Бренд', 'Наименование', 'Остаток склад', 'Категория', 'Объем мл', 'Цена продажи', 'Стоимость руб'];
+                    const rows = this.filteredProducts.map(p => [
+                        p.brand,
+                        p.name,
+                        p.stock,
+                        p.description || '',
+                        p.volume,
+                        p.rrp,
+                        p.price
+                    ]);
+                    
+                    const csvContent = [
+                        headers.join(','),
+                        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+                    ].join('\n');
+                    
+                    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `nalico_export_${new Date().toISOString().split('T')[0]}.csv`;
+                    link.click();
+                },
+                
+                // Sort by column
+                sortBy(column) {
+                    if (this.sortColumn === column) {
+                        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        this.sortColumn = column;
+                        this.sortDirection = 'asc';
+                    }
+                },
+                
+                // Reset filters
+                resetFilters() {
+                    this.searchQuery = '';
+                    this.selectedBrands = [];
+                    this.stockFilter = 'instock';
+                    this.sortColumn = null;
+                    this.sortDirection = 'asc';
+                },
+                
+                // Toggle theme
+                toggleTheme() {
+                    this.isDark = !this.isDark;
+                    if (this.isDark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                    localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+                },
+                
+                // Toggle auto-refresh
+                toggleAutoRefresh() {
+                    this.autoRefreshEnabled = !this.autoRefreshEnabled;
+                    if (this.autoRefreshEnabled) {
+                        this.autoRefreshInterval = setInterval(() => {
+                            this.loadDataFromJSON();
+                        }, 30000);
+                    } else {
+                        if (this.autoRefreshInterval) {
+                            clearInterval(this.autoRefreshInterval);
+                            this.autoRefreshInterval = null;
+                        }
+                    }
+                },
+                
+                // Format number
+                formatNumber(num) {
+                    return num.toLocaleString('ru-RU');
+                },
+                
+                // Format price
+                formatPrice(price) {
+                    if (!price) return '—';
+                    return price.toLocaleString('ru-RU') + ' ₽';
                 }
-            });
-        }
-
-        function applyFilters() {
-            const searchValue = document.getElementById('searchInput').value.toLowerCase();
-            const brandFilter = document.getElementById('brandFilter');
-            const selectedBrands = Array.from(brandFilter.selectedOptions).map(option => option.value);
-            const stockValue = document.getElementById('stockFilter').value;
-
-            filteredProducts = allProducts.filter(product => {
-                // Поиск по названию, бренду, описанию
-                const matchesSearch = !searchValue || 
-                    product.name.toLowerCase().includes(searchValue) ||
-                    product.brand.toLowerCase().includes(searchValue) ||
-                    (product.description && product.description.toLowerCase().includes(searchValue)) ||
-                    (product.article && product.article.toLowerCase().includes(searchValue));
-
-                // Фильтр по бренду (множественный выбор)
-                const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
-
-                // Фильтр по наличию
-                const matchesStock = stockValue === 'all' || 
-                    (stockValue === 'instock' && product.stock > 0);
-
-                return matchesSearch && matchesBrand && matchesStock;
-            });
-
-            // Применяем сортировку если есть
-            if (sortColumn) {
-                sortProducts(sortColumn, false);
-            }
-
-            renderTable();
-            updateStats();
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            
-            if (filteredProducts.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="no-data">Нет товаров для отображения</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = filteredProducts.map(product => `
-                <tr>
-                    <td data-label="Бренд"><strong>${escapeHtml(product.brand)}</strong></td>
-                    <td data-label="Наименование">${escapeHtml(product.name)}</td>
-                    <td data-label="Остаток"><strong>${product.stock}</strong></td>
-                    <td data-label="Категория"><em>${escapeHtml(product.description || '—')}</em></td>
-                    <td data-label="Объем">${product.volume || '—'}</td>
-                    <td data-label="Цена продажи" class="rrp-price">${product.rrp ? product.rrp.toLocaleString('ru-RU') + ' ₽' : '—'}</td>
-                    <td data-label="Стоимость">${product.price ? product.price.toLocaleString('ru-RU') + ' ₽' : '—'}</td>
-                    <td data-label="Статус">
-                        <span class="stock-badge ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
-                            ${product.stock > 0 ? '✓ В наличии' : '✗ Нет в наличии'}
-                        </span>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function updateStats() {
-            const totalProducts = filteredProducts.length;
-            const inStockProducts = filteredProducts.filter(p => p.stock > 0).length;
-
-            document.getElementById('totalProducts').textContent = totalProducts.toLocaleString('ru-RU');
-            document.getElementById('inStockProducts').textContent = inStockProducts.toLocaleString('ru-RU');
-        }
-
-        function updateFileInfo(filename, timestamp) {
-            const date = new Date(timestamp);
-            document.getElementById('fileInfo').textContent = 
-                `📄 ${filename} (изменен: ${date.toLocaleDateString('ru-RU')} ${date.toLocaleTimeString('ru-RU')})`;
-        }
-
-        // Sorting
-        document.querySelectorAll('th.sortable').forEach(th => {
-            th.addEventListener('click', () => {
-                const column = th.dataset.column;
-                sortProducts(column);
-            });
-        });
-
-        function sortProducts(column, toggle = true) {
-            if (toggle) {
-                if (sortColumn === column) {
-                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-                } else {
-                    sortColumn = column;
-                    sortDirection = 'asc';
+            },
+            mounted() {
+                // Load theme from localStorage
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                this.isDark = savedTheme === 'dark';
+                if (this.isDark) {
+                    document.documentElement.classList.add('dark');
                 }
+                
+                // Load data
+                this.loadDataFromJSON();
             }
-
-            filteredProducts.sort((a, b) => {
-                let aVal = a[column];
-                let bVal = b[column];
-
-                // Для строк
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                    bVal = bVal.toLowerCase();
-                }
-
-                if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-                if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
-
-            // Обновляем индикаторы сортировки
-            document.querySelectorAll('th.sortable').forEach(th => {
-                th.classList.remove('sorted-asc', 'sorted-desc');
-                if (th.dataset.column === column) {
-                    th.classList.add(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
-                }
-            });
-
-            renderTable();
-        }
-
-        // Export to CSV
-        function exportToCSV() {
-            if (filteredProducts.length === 0) {
-                alert('Нет данных для экспорта');
-                return;
-            }
-
-            const headers = ['Бренд', 'Наименование', 'Остаток склад', 'Категория', 'Объем мл', 'Цена продажи', 'Стоимость руб'];
-            const rows = filteredProducts.map(p => [
-                p.brand,
-                p.name,
-                p.stock,
-                p.description || '',
-                p.volume,
-                p.rrp,
-                p.price
-            ]);
-
-            const csvContent = [
-                headers.join(','),
-                ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-            ].join('\n');
-
-            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `predzakaz_export_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
-        }
-
-        // Reset filters
-        function resetFilters() {
-            document.getElementById('searchInput').value = '';
-            // Снимаем выбор со всех опций в multiple select
-            const brandFilter = document.getElementById('brandFilter');
-            Array.from(brandFilter.options).forEach(option => option.selected = false);
-            document.getElementById('stockFilter').value = 'instock';
-            applyFilters();
-        }
-
-        // Show error
-        function showError(message, type = 'error') {
-            const container = document.getElementById('errorContainer');
-            if (!message) {
-                container.innerHTML = '';
-                return;
-            }
-
-            const alertClass = type === 'info' ? 'file-info' : 'error';
-            container.innerHTML = `<div class="${alertClass}">${message}</div>`;
-        }
-
-        // Utility function
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Close info banner
-        function closeInfoBanner() {
-            document.getElementById('infoBanner').classList.remove('show');
-            localStorage.setItem('infoBannerClosed', 'true');
-        }
-
-        // Toggle stats visibility
-        function toggleStats() {
-            const statsGrid = document.getElementById('statsGrid');
-            const arrow = document.getElementById('statsArrow');
-            const isHidden = statsGrid.style.display === 'none';
-            
-            statsGrid.style.display = isHidden ? 'grid' : 'none';
-            statsGrid.classList.toggle('hidden');
-            arrow.textContent = isHidden ? '▲' : '▼';
-            
-            // Save state to localStorage
-            localStorage.setItem('statsVisible', isHidden);
-        }
-
-        // Check if banner was closed before
-        if (localStorage.getItem('infoBannerClosed') === 'true') {
-            document.getElementById('infoBanner').classList.remove('show');
-        }
-
-        // Load stats visibility state on page load
-        if (localStorage.getItem('statsVisible') === 'true') {
-            document.getElementById('statsGrid').style.display = 'grid';
-            document.getElementById('statsGrid').classList.remove('hidden');
-            document.getElementById('statsArrow').textContent = '▲';
-        }
-
-        // Event listeners for filters
-        document.getElementById('searchInput').addEventListener('input', applyFilters);
-        document.getElementById('brandFilter').addEventListener('change', applyFilters);
-        document.getElementById('stockFilter').addEventListener('change', applyFilters);
-
-        // Автоматическая загрузка данных при открытии страницы
-        window.addEventListener('DOMContentLoaded', () => {
-            loadDataFromJSON();
-        });
+        }).mount('#app');
     </script>
 </body>
 </html>
