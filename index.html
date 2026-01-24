@@ -203,6 +203,7 @@
                             v-model="selectedBrands"
                             multiple
                             size="5"
+                            ref="brandSelect"
                             class="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-nalico-milk dark:bg-nalico-dark-bg text-gray-900 dark:text-white focus:border-nalico-pink focus:ring-4 focus:ring-nalico-pink/15 transition-all outline-none"
                         >
                             <option v-for="brand in availableBrands" :key="brand" :value="brand" class="py-1.5">
@@ -480,6 +481,13 @@
                     this.$nextTick(() => {
                         lucide.createIcons();
                     });
+                },
+                selectedBrands: {
+                    handler(newVal) {
+                        console.log('selectedBrands changed:', newVal);
+                        this.currentPage = 1;
+                    },
+                    deep: true
                 }
             },
             methods: {
@@ -712,7 +720,15 @@
                     this.sortColumn = null;
                     this.sortDirection = 'asc';
                     this.currentPage = 1;
+                    
+                    // Принудительная очистка multiple select
                     this.$nextTick(() => {
+                        if (this.$refs.brandSelect) {
+                            const options = this.$refs.brandSelect.options;
+                            for (let i = 0; i < options.length; i++) {
+                                options[i].selected = false;
+                            }
+                        }
                         lucide.createIcons();
                     });
                 },
