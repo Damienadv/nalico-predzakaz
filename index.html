@@ -159,6 +159,29 @@
             transition: all 0.3s;
         }
 
+        select[multiple] {
+            min-height: 120px;
+            padding: 5px;
+        }
+
+        select[multiple] option {
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 2px 0;
+            cursor: pointer;
+        }
+
+        select[multiple] option:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        select[multiple] option:checked {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
         input:focus, select:focus {
             outline: none;
             border-color: var(--accent-color);
@@ -552,9 +575,8 @@
                     <input type="text" id="searchInput" placeholder="Введите название товара...">
                 </div>
                 <div class="filter-group">
-                    <label for="brandFilter">🏷️ Бренд</label>
-                    <select id="brandFilter">
-                        <option value="">Все бренды</option>
+                    <label for="brandFilter">🏷️ Бренд (можно выбрать несколько)</label>
+                    <select id="brandFilter" multiple size="5">
                     </select>
                 </div>
                 <div class="filter-group">
@@ -846,7 +868,7 @@
             const brandFilter = document.getElementById('brandFilter');
             const brands = [...new Set(allProducts.map(p => p.brand))].sort();
             
-            brandFilter.innerHTML = '<option value="">Все бренды</option>';
+            brandFilter.innerHTML = '';
             brands.forEach(brand => {
                 if (brand) {
                     const option = document.createElement('option');
@@ -859,7 +881,8 @@
 
         function applyFilters() {
             const searchValue = document.getElementById('searchInput').value.toLowerCase();
-            const brandValue = document.getElementById('brandFilter').value;
+            const brandFilter = document.getElementById('brandFilter');
+            const selectedBrands = Array.from(brandFilter.selectedOptions).map(option => option.value);
             const stockValue = document.getElementById('stockFilter').value;
 
             filteredProducts = allProducts.filter(product => {
@@ -870,8 +893,8 @@
                     (product.description && product.description.toLowerCase().includes(searchValue)) ||
                     (product.article && product.article.toLowerCase().includes(searchValue));
 
-                // Фильтр по бренду
-                const matchesBrand = !brandValue || product.brand === brandValue;
+                // Фильтр по бренду (множественный выбор)
+                const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
 
                 // Фильтр по наличию
                 const matchesStock = stockValue === 'all' || 
@@ -1006,7 +1029,9 @@
         // Reset filters
         function resetFilters() {
             document.getElementById('searchInput').value = '';
-            document.getElementById('brandFilter').value = '';
+            // Снимаем выбор со всех опций в multiple select
+            const brandFilter = document.getElementById('brandFilter');
+            Array.from(brandFilter.options).forEach(option => option.selected = false);
             document.getElementById('stockFilter').value = 'instock';
             applyFilters();
         }
