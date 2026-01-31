@@ -28,8 +28,8 @@
             theme: {
                 extend: {
                     colors: {
-                        'nalico-pink': '#F9BFC5',
-                        'nalico-pink-hover': '#f3aab3',
+                        'nalico-pink': '#E8778C',
+                        'nalico-pink-hover': '#D65D73',
                         'nalico-milk': '#FFF5F5',
                         'nalico-brown': '#887D6D',
                         'nalico-dark-bg': '#1A1A1A',
@@ -41,7 +41,7 @@
                     },
                     boxShadow: {
                         'soft': '0 4px 16px rgba(0, 0, 0, 0.06)',
-                        'pink': '0 8px 24px rgba(249, 191, 197, 0.12)',
+                        'pink': '0 8px 24px rgba(232, 119, 140, 0.15)',
                     },
                     borderRadius: {
                         'card': '1rem',
@@ -76,17 +76,17 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #F9BFC5;
+            background: #E8778C;
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #f3aab3;
+            background: #D65D73;
         }
 
         /* Gradient text */
         .gradient-text {
-            background: linear-gradient(135deg, #F9BFC5 0%, #f3aab3 100%);
+            background: linear-gradient(135deg, #E8778C 0%, #D65D73 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -94,7 +94,7 @@
 
         /* Multiple select styling */
         select[multiple] option:checked {
-            background: linear-gradient(135deg, #F9BFC5 0%, #f3aab3 100%);
+            background: linear-gradient(135deg, #E8778C 0%, #D65D73 100%);
             color: white;
         }
     </style>
@@ -282,7 +282,7 @@
                         </thead>
                         <tbody>
                             <tr v-if="loading" class="border-t border-gray-100 dark:border-gray-800">
-                                <td colspan="8" class="px-6 py-12 text-center text-nalico-brown dark:text-gray-400">
+                                <td colspan="9" class="px-6 py-12 text-center text-nalico-brown dark:text-gray-400">
                                     <div class="flex items-center justify-center gap-3">
                                         <div class="w-8 h-8 border-4 border-nalico-pink border-t-transparent rounded-full animate-spin"></div>
                                         <span>Загрузка данных...</span>
@@ -290,7 +290,7 @@
                                 </td>
                             </tr>
                             <tr v-else-if="filteredProducts.length === 0" class="border-t border-gray-100 dark:border-gray-800">
-                                <td colspan="8" class="px-6 py-12 text-center text-nalico-brown dark:text-gray-400">
+                                <td colspan="9" class="px-6 py-12 text-center text-nalico-brown dark:text-gray-400">
                                     Нет товаров для отображения
                                 </td>
                             </tr>
@@ -302,8 +302,9 @@
                             >
                                 <td class="px-4 sm:px-6 py-4 font-semibold text-gray-900 dark:text-white text-sm">{{ product.brand }}</td>
                                 <td class="px-4 sm:px-6 py-4 text-gray-900 dark:text-white text-sm">{{ product.name }}</td>
-                                <td class="px-4 sm:px-6 py-4 font-bold text-gray-900 dark:text-white">{{ product.stock }}</td>
+                                <td class="px-4 sm:px-6 py-4 font-bold text-green-600 dark:text-green-400">{{ formatPrice(calculateNalicoPrice(product.rrp)) }}</td>
                                 <td class="px-4 sm:px-6 py-4 text-sm text-gray-600 dark:text-gray-400 hidden lg:table-cell">{{ product.description || '—' }}</td>
+                                <td class="px-4 sm:px-6 py-4 font-bold text-gray-900 dark:text-white">{{ product.stock }}</td>
                                 <td class="px-4 sm:px-6 py-4 text-gray-900 dark:text-white hidden md:table-cell">{{ product.volume || '—' }}</td>
                                 <td class="px-4 sm:px-6 py-4 font-bold text-nalico-pink">{{ formatPrice(product.rrp) }}</td>
                                 <td class="px-4 sm:px-6 py-4 text-gray-900 dark:text-white">{{ formatPrice(product.price) }}</td>
@@ -390,8 +391,9 @@
                     columns: [
                         { key: 'brand', label: 'Бренд', class: '' },
                         { key: 'name', label: 'Наименование', class: '' },
-                        { key: 'stock', label: 'Остаток', class: '' },
+                        { key: 'nalicoPrice', label: 'Цена NALICO', class: '' },
                         { key: 'description', label: 'Категория', class: 'hidden lg:table-cell' },
+                        { key: 'stock', label: 'Остаток', class: '' },
                         { key: 'volume', label: 'Объем, мл', class: 'hidden md:table-cell' },
                         { key: 'rrp', label: 'Цена продажи', class: '' },
                         { key: 'price', label: 'Стоимость, ₽', class: '' },
@@ -685,12 +687,13 @@
                         return;
                     }
                     
-                    const headers = ['Бренд', 'Наименование', 'Остаток склад', 'Категория', 'Объем мл', 'Цена продажи', 'Стоимость руб'];
+                    const headers = ['Бренд', 'Наименование', 'Цена NALICO', 'Категория', 'Остаток склад', 'Объем мл', 'Цена продажи', 'Стоимость руб'];
                     const rows = this.filteredProducts.map(p => [
                         p.brand,
                         p.name,
-                        p.stock,
+                        this.calculateNalicoPrice(p.rrp),
                         p.description || '',
+                        p.stock,
                         p.volume,
                         p.rrp,
                         p.price
@@ -774,6 +777,13 @@
                 formatPrice(price) {
                     if (!price) return '—';
                     return price.toLocaleString('ru-RU') + ' ₽';
+                },
+                
+                // Calculate NALICO price (+20% rounded up to nearest 100)
+                calculateNalicoPrice(rrp) {
+                    if (!rrp) return null;
+                    const increased = rrp * 1.2;
+                    return Math.ceil(increased / 100) * 100;
                 }
             },
             mounted() {
